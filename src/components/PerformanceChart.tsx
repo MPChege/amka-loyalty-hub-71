@@ -22,14 +22,14 @@ export default function PerformanceChart() {
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(226, 232, 240, 0.3)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.3)" />
             <XAxis dataKey="name" stroke="rgba(100, 116, 139, 0.7)" />
             <YAxis stroke="rgba(100, 116, 139, 0.7)" />
             <Tooltip 
               contentStyle={{
-                background: 'rgba(255, 255, 255, 0.1)',
+                background: 'rgba(255, 255, 255, 0.08)',
                 backdropFilter: 'blur(16px) saturate(180%)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
                 borderRadius: '12px',
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                 color: 'rgba(15, 23, 42, 0.9)'
@@ -38,20 +38,20 @@ export default function PerformanceChart() {
             <Line 
               type="monotone" 
               dataKey="revenue" 
-              stroke="rgba(99, 102, 241, 0.8)" 
+              stroke="rgba(71, 85, 105, 0.8)" 
               strokeWidth={3}
               name="Revenue (KES)"
-              dot={{ fill: 'rgba(99, 102, 241, 0.8)', strokeWidth: 2, r: 5 }}
-              activeDot={{ r: 7, fill: 'rgba(79, 70, 229, 0.9)', stroke: 'rgba(255, 255, 255, 0.8)', strokeWidth: 2 }}
+              dot={{ fill: 'rgba(71, 85, 105, 0.8)', strokeWidth: 2, r: 5 }}
+              activeDot={{ r: 7, fill: 'rgba(51, 65, 85, 0.9)', stroke: 'rgba(255, 255, 255, 0.8)', strokeWidth: 2 }}
             />
             <Line 
               type="monotone" 
               dataKey="customers" 
-              stroke="rgba(139, 92, 246, 0.8)" 
+              stroke="rgba(100, 116, 139, 0.8)" 
               strokeWidth={3}
               name="New Customers"
-              dot={{ fill: 'rgba(139, 92, 246, 0.8)', strokeWidth: 2, r: 5 }}
-              activeDot={{ r: 7, fill: 'rgba(124, 58, 237, 0.9)', stroke: 'rgba(255, 255, 255, 0.8)', strokeWidth: 2 }}
+              dot={{ fill: 'rgba(100, 116, 139, 0.8)', strokeWidth: 2, r: 5 }}
+              activeDot={{ r: 7, fill: 'rgba(71, 85, 105, 0.9)', stroke: 'rgba(255, 255, 255, 0.8)', strokeWidth: 2 }}
             />
           </LineChart>
         </ResponsiveContainer>
