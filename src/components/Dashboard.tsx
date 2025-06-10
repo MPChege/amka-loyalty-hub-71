@@ -12,7 +12,7 @@ import TopCustomers from '@/components/TopCustomers';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, TrendingUp, DollarSign, Award, Calendar, Shield, Bell, Coffee, MapPin, Star } from 'lucide-react';
+import { LogOut, Users, TrendingUp, DollarSign, Award, Calendar, Shield, Bell, Coffee, MapPin, Star, Sparkles } from 'lucide-react';
 
 interface AdminData {
   email: string;
@@ -119,7 +119,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20">
       <Sidebar 
         userRole={user.role} 
         currentBrand={currentBrand}
@@ -132,23 +132,26 @@ export default function Dashboard() {
           userRole={user.firstName + ' ' + user.lastName}
         />
         
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20 p-6">
           <div className="max-w-7xl mx-auto space-y-6">
             {/* Header with logout and admin registration */}
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold text-foreground mb-2">
-                  {user.role === 'super_admin' ? 'Global' : brandNames[currentBrand as keyof typeof brandNames]} Dashboard
-                </h1>
-                <p className="text-muted-foreground">
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    {user.role === 'super_admin' ? 'Global' : brandNames[currentBrand as keyof typeof brandNames]} Dashboard
+                  </h1>
+                  <Sparkles className="h-6 w-6 text-purple-500 animate-pulse" />
+                </div>
+                <p className="text-slate-600 text-lg">
                   {getWelcomeMessage()}
                 </p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Badge variant="secondary" className="capitalize">
+                <div className="flex items-center gap-2 mt-3">
+                  <Badge variant="secondary" className="capitalize bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 border-indigo-200">
                     {user.role.replace('_', ' ')}
                   </Badge>
                   {user.role === 'admin' && (
-                    <Badge variant="outline" className="text-primary">
+                    <Badge variant="outline" className="text-purple-600 border-purple-300 bg-purple-50">
                       Brand Administrator
                     </Badge>
                   )}
@@ -163,7 +166,7 @@ export default function Dashboard() {
                     success={registrationSuccess}
                   />
                 )}
-                <Button variant="outline" onClick={logout} className="flex items-center gap-2">
+                <Button variant="outline" onClick={logout} className="flex items-center gap-2 premium-button">
                   <LogOut className="h-4 w-4" />
                   Logout
                 </Button>
@@ -178,7 +181,7 @@ export default function Dashboard() {
                 icon={Users}
                 description="Active loyalty members"
                 trend={{ value: 12, isPositive: true }}
-                className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200"
+                className="metric-card-blue"
               />
               <DashboardCard
                 title="Monthly Revenue"
@@ -186,7 +189,7 @@ export default function Dashboard() {
                 icon={DollarSign}
                 description="From loyalty transactions"
                 trend={{ value: 8, isPositive: true }}
-                className="bg-gradient-to-br from-green-50 to-green-100 border-green-200"
+                className="metric-card-green"
               />
               <DashboardCard
                 title="Points Redeemed"
@@ -194,7 +197,7 @@ export default function Dashboard() {
                 icon={Award}
                 description="This month"
                 trend={{ value: 15, isPositive: true }}
-                className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200"
+                className="metric-card-purple"
               />
               <DashboardCard
                 title="Growth Rate"
@@ -202,53 +205,53 @@ export default function Dashboard() {
                 icon={TrendingUp}
                 description="Customer acquisition"
                 trend={{ value: 5, isPositive: true }}
-                className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200"
+                className="metric-card-orange"
               />
             </div>
 
             {/* Additional Performance Metrics for Admins */}
             {(user.role === 'admin' || user.role === 'super_admin') && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200">
+                <Card className="admin-card hover:scale-105 transition-transform duration-300">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                    <CardTitle className="text-sm font-medium text-slate-600">
                       Today's Orders
                     </CardTitle>
                     <Calendar className="h-4 w-4 text-indigo-600" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold text-indigo-700">{currentMetrics.todayOrders}</div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-slate-500 mt-1">
                       Active transactions today
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
+                <Card className="admin-card hover:scale-105 transition-transform duration-300">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                    <CardTitle className="text-sm font-medium text-slate-600">
                       Average Spend
                     </CardTitle>
-                    <Coffee className="h-4 w-4 text-rose-600" />
+                    <Coffee className="h-4 w-4 text-emerald-600" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-rose-700">{currentMetrics.averageSpend}</div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <div className="text-2xl font-bold text-emerald-700">{currentMetrics.averageSpend}</div>
+                    <p className="text-xs text-slate-500 mt-1">
                       Per customer transaction
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
+                <Card className="admin-card hover:scale-105 transition-transform duration-300">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                    <CardTitle className="text-sm font-medium text-slate-600">
                       Satisfaction Rate
                     </CardTitle>
                     <Star className="h-4 w-4 text-amber-600" />
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold text-amber-700">{currentMetrics.satisfaction}/5</div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-slate-500 mt-1">
                       Customer feedback average
                     </p>
                   </CardContent>
@@ -272,41 +275,43 @@ export default function Dashboard() {
 
             {/* Admin-only Brand Management Section */}
             {user.role === 'admin' && (
-              <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+              <Card className="glass-effect border-indigo-200/50 hover:shadow-2xl transition-all duration-300">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-primary" />
-                    Brand Administration Tools
+                    <Shield className="h-5 w-5 text-indigo-600" />
+                    <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                      Brand Administration Tools
+                    </span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Button variant="outline" className="h-auto p-4 flex-col items-start">
+                    <Button variant="outline" className="h-auto p-4 flex-col items-start admin-card hover:scale-105 transition-all duration-300">
                       <div className="flex items-center gap-2 mb-1">
-                        <Users className="h-4 w-4" />
-                        <span className="font-medium">Staff Management</span>
+                        <Users className="h-4 w-4 text-indigo-600" />
+                        <span className="font-medium text-slate-700">Staff Management</span>
                       </div>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-slate-500">
                         Manage waiters and managers
                       </span>
                     </Button>
                     
-                    <Button variant="outline" className="h-auto p-4 flex-col items-start">
+                    <Button variant="outline" className="h-auto p-4 flex-col items-start admin-card hover:scale-105 transition-all duration-300">
                       <div className="flex items-center gap-2 mb-1">
-                        <Bell className="h-4 w-4" />
-                        <span className="font-medium">Campaign Control</span>
+                        <Bell className="h-4 w-4 text-purple-600" />
+                        <span className="font-medium text-slate-700">Campaign Control</span>
                       </div>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-slate-500">
                         Create and manage promotions
                       </span>
                     </Button>
                     
-                    <Button variant="outline" className="h-auto p-4 flex-col items-start">
+                    <Button variant="outline" className="h-auto p-4 flex-col items-start admin-card hover:scale-105 transition-all duration-300">
                       <div className="flex items-center gap-2 mb-1">
-                        <MapPin className="h-4 w-4" />
-                        <span className="font-medium">Location Settings</span>
+                        <MapPin className="h-4 w-4 text-emerald-600" />
+                        <span className="font-medium text-slate-700">Location Settings</span>
                       </div>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-slate-500">
                         Configure branch settings
                       </span>
                     </Button>

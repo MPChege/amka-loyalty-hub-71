@@ -3,48 +3,99 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Café Amka Design System */
+/* Café Amka Design System - Premium Admin Theme */
 
 @layer base {
   :root {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
+    --background: 248 250 252;
+    --foreground: 15 23 42;
 
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
+    --card: 255 255 255;
+    --card-foreground: 15 23 42;
 
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
+    --popover: 255 255 255;
+    --popover-foreground: 15 23 42;
 
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
+    --primary: 99 102 241;
+    --primary-foreground: 248 250 252;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 60 9.1% 97.8%;
+    --secondary: 241 245 249;
+    --secondary-foreground: 51 65 85;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 248 250 252;
+    --muted-foreground: 100 116 139;
 
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 60 9.1% 97.8%;
+    --accent: 139 92 246;
+    --accent-foreground: 248 250 252;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 60 9.1% 97.8%;
+    --destructive: 239 68 68;
+    --destructive-foreground: 248 250 252;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142.4 71.8% 29.2%;
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --ring: 99 102 241;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 25 25% 8%;
-    --sidebar-foreground: 60 9.1% 97.8%;
-    --sidebar-primary: 142.1 76.2% 36.3%;
-    --sidebar-primary-foreground: 355.7 100% 97.3%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 60 9.1% 97.8%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 142.4 71.8% 29.2%;
+    --sidebar-background: 30 41 59;
+    --sidebar-foreground: 248 250 252;
+    --sidebar-primary: 99 102 241;
+    --sidebar-primary-foreground: 248 250 252;
+    --sidebar-accent: 51 65 85;
+    --sidebar-accent-foreground: 248 250 252;
+    --sidebar-border: 51 65 85;
+    --sidebar-ring: 99 102 241;
+
+    /* Premium gradient variables */
+    --gradient-primary: linear-gradient(135deg, rgb(99 102 241) 0%, rgb(139 92 246) 100%);
+    --gradient-secondary: linear-gradient(135deg, rgb(16 185 129) 0%, rgb(5 150 105) 100%);
+    --gradient-accent: linear-gradient(135deg, rgb(245 158 11) 0%, rgb(217 119 6) 100%);
+    --gradient-surface: linear-gradient(135deg, rgb(255 255 255) 0%, rgb(248 250 252) 100%);
+  }
+
+  .dark {
+    --background: 2 6 23;
+    --foreground: 248 250 252;
+
+    --card: 15 23 42;
+    --card-foreground: 248 250 252;
+
+    --popover: 15 23 42;
+    --popover-foreground: 248 250 252;
+
+    --primary: 129 140 248;
+    --primary-foreground: 15 23 42;
+
+    --secondary: 30 41 59;
+    --secondary-foreground: 203 213 225;
+
+    --muted: 30 41 59;
+    --muted-foreground: 148 163 184;
+
+    --accent: 167 139 250;
+    --accent-foreground: 15 23 42;
+
+    --destructive: 248 113 113;
+    --destructive-foreground: 15 23 42;
+
+    --border: 30 41 59;
+    --input: 30 41 59;
+    --ring: 129 140 248;
+
+    --sidebar-background: 2 6 23;
+    --sidebar-foreground: 248 250 252;
+    --sidebar-primary: 129 140 248;
+    --sidebar-primary-foreground: 15 23 42;
+    --sidebar-accent: 30 41 59;
+    --sidebar-accent-foreground: 248 250 252;
+    --sidebar-border: 30 41 59;
+    --sidebar-ring: 129 140 248;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, rgb(129 140 248) 0%, rgb(167 139 250) 100%);
+    --gradient-secondary: linear-gradient(135deg, rgb(52 211 153) 0%, rgb(16 185 129) 100%);
+    --gradient-accent: linear-gradient(135deg, rgb(251 191 36) 0%, rgb(245 158 11) 100%);
+    --gradient-surface: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(30 41 59) 100%);
   }
 }
 
@@ -61,14 +112,67 @@
 
 @layer components {
   .gradient-card {
-    @apply bg-gradient-to-br from-coffee-600 to-coffee-800;
+    background: var(--gradient-primary);
+    @apply shadow-lg shadow-primary/20;
   }
   
-  .loyalty-card {
-    @apply bg-gradient-to-br from-gold-500 to-gold-600;
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+    @apply shadow-lg shadow-emerald-500/20;
   }
   
-  .stat-card {
-    @apply bg-gradient-to-br from-emerald-600 to-emerald-700;
+  .gradient-accent {
+    background: var(--gradient-accent);
+    @apply shadow-lg shadow-amber-500/20;
   }
+
+  .gradient-surface {
+    background: var(--gradient-surface);
+    @apply shadow-sm border border-border/50;
+  }
+
+  .glass-effect {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+  }
+
+  .admin-card {
+    @apply bg-gradient-to-br from-white via-slate-50 to-indigo-50/30 border border-slate-200/50 shadow-lg hover:shadow-xl transition-all duration-300;
+  }
+
+  .premium-button {
+    @apply bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105;
+  }
+
+  .metric-card-blue {
+    @apply bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border border-blue-200/50 shadow-md hover:shadow-lg transition-all duration-300;
+  }
+
+  .metric-card-green {
+    @apply bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 border border-emerald-200/50 shadow-md hover:shadow-lg transition-all duration-300;
+  }
+
+  .metric-card-purple {
+    @apply bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 border border-purple-200/50 shadow-md hover:shadow-lg transition-all duration-300;
+  }
+
+  .metric-card-orange {
+    @apply bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 border border-orange-200/50 shadow-md hover:shadow-lg transition-all duration-300;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
 }

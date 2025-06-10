@@ -13,30 +13,43 @@ const data = [
 
 export default function PerformanceChart() {
   return (
-    <Card className="animate-fade-in">
+    <Card className="glass-effect hover:shadow-2xl transition-all duration-300 border-indigo-200/50">
       <CardHeader>
-        <CardTitle>Performance Analytics</CardTitle>
+        <CardTitle className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          Performance Analytics
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis dataKey="name" stroke="#64748b" />
+            <YAxis stroke="#64748b" />
+            <Tooltip 
+              contentStyle={{
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                border: '1px solid #e2e8f0',
+                borderRadius: '8px',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+              }}
+            />
             <Line 
               type="monotone" 
               dataKey="revenue" 
-              stroke="hsl(var(--primary))" 
-              strokeWidth={2}
+              stroke="#6366f1" 
+              strokeWidth={3}
               name="Revenue (KES)"
+              dot={{ fill: '#6366f1', strokeWidth: 2, r: 5 }}
+              activeDot={{ r: 7, fill: '#4f46e5' }}
             />
             <Line 
               type="monotone" 
               dataKey="customers" 
-              stroke="hsl(var(--destructive))" 
-              strokeWidth={2}
+              stroke="#8b5cf6" 
+              strokeWidth={3}
               name="New Customers"
+              dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 5 }}
+              activeDot={{ r: 7, fill: '#7c3aed' }}
             />
           </LineChart>
         </ResponsiveContainer>
