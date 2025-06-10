@@ -10,7 +10,7 @@ const topCustomers = [
     name: 'Sarah Johnson',
     points: 8540,
     spent: 'KES 45,200',
-    tier: 'Platinum',
+    tier: 'Gold',
     growth: '+23%'
   },
   {
@@ -18,7 +18,7 @@ const topCustomers = [
     name: 'Michael Chen',
     points: 7890,
     spent: 'KES 42,100',
-    tier: 'Platinum',
+    tier: 'Gold',
     growth: '+18%'
   },
   {
@@ -26,7 +26,7 @@ const topCustomers = [
     name: 'Emma Davis',
     points: 6750,
     spent: 'KES 38,900',
-    tier: 'Diamond',
+    tier: 'Silver',
     growth: '+31%'
   },
   {
@@ -34,7 +34,7 @@ const topCustomers = [
     name: 'David Wilson',
     points: 5620,
     spent: 'KES 32,400',
-    tier: 'Diamond',
+    tier: 'Silver',
     growth: '+12%'
   },
   {
@@ -42,67 +42,63 @@ const topCustomers = [
     name: 'Lisa Brown',
     points: 4890,
     spent: 'KES 28,700',
-    tier: 'Elite',
+    tier: 'Bronze',
     growth: '+25%'
   }
 ];
 
 const getTierColor = (tier: string) => {
   switch (tier) {
-    case 'Platinum':
-      return 'liquid-glass-card bg-gradient-to-r from-slate-400/20 to-slate-500/20 text-slate-800 border-slate-400/30';
-    case 'Diamond':
-      return 'liquid-glass-card bg-gradient-to-r from-slate-300/20 to-slate-400/20 text-slate-700 border-slate-300/30';
-    case 'Elite':
-      return 'liquid-glass-card bg-gradient-to-r from-slate-500/20 to-slate-600/20 text-slate-700 border-slate-500/30';
+    case 'Gold':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'Silver':
+      return 'bg-gray-100 text-gray-800';
+    case 'Bronze':
+      return 'bg-orange-100 text-orange-800';
     default:
-      return 'liquid-glass-card bg-gradient-to-r from-slate-400/20 to-slate-500/20 text-slate-700 border-slate-400/30';
+      return 'bg-gray-100 text-gray-800';
   }
 };
 
 export default function TopCustomers() {
   return (
-    <Card className="bg-transparent border-0 shadow-none">
+    <Card className="animate-fade-in">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Crown className="h-5 w-5 text-slate-600/80" />
-          <span className="glass-text text-lg">
-            Top Loyalty Customers
-          </span>
+          <Crown className="h-5 w-5 text-yellow-600" />
+          Top Loyalty Customers
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {topCustomers.map((customer, index) => (
-            <div key={customer.id} className="liquid-glass-card p-4 glass-refraction">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full liquid-glass-card bg-gradient-to-r from-slate-400/30 to-slate-500/30 text-slate-600/90 font-bold text-sm border-slate-400/30">
-                      #{index + 1}
-                    </div>
-                    <Avatar className="h-10 w-10 liquid-glass-card border-white/30">
-                      <AvatarFallback className="text-xs bg-gradient-to-br from-slate-500/80 to-slate-600/80 text-white backdrop-blur-sm">
-                        {customer.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-700/90">{customer.name}</p>
-                    <p className="text-xs text-slate-500/80">
-                      {customer.points.toLocaleString()} points • {customer.spent}
-                    </p>
-                  </div>
+            <div key={customer.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-muted-foreground w-6">
+                    #{index + 1}
+                  </span>
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="text-xs">
+                      {customer.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 liquid-glass-card bg-slate-400/20 text-slate-700 px-3 py-1 rounded-full border-slate-400/30">
-                    <TrendingUp className="h-3 w-3" />
-                    <span className="text-xs font-medium">{customer.growth}</span>
-                  </div>
-                  <Badge variant="secondary" className={getTierColor(customer.tier)}>
-                    {customer.tier}
-                  </Badge>
+                <div>
+                  <p className="text-sm font-medium">{customer.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {customer.points.toLocaleString()} points • {customer.spent}
+                  </p>
                 </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 text-green-600">
+                  <TrendingUp className="h-3 w-3" />
+                  <span className="text-xs font-medium">{customer.growth}</span>
+                </div>
+                <Badge variant="secondary" className={getTierColor(customer.tier)}>
+                  {customer.tier}
+                </Badge>
               </div>
             </div>
           ))}

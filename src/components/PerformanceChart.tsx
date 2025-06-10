@@ -13,45 +13,30 @@ const data = [
 
 export default function PerformanceChart() {
   return (
-    <Card className="bg-transparent border-0 shadow-none">
+    <Card className="animate-fade-in">
       <CardHeader>
-        <CardTitle className="glass-text text-lg">
-          Performance Analytics
-        </CardTitle>
+        <CardTitle>Performance Analytics</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148, 163, 184, 0.3)" />
-            <XAxis dataKey="name" stroke="rgba(100, 116, 139, 0.7)" />
-            <YAxis stroke="rgba(100, 116, 139, 0.7)" />
-            <Tooltip 
-              contentStyle={{
-                background: 'rgba(255, 255, 255, 0.08)',
-                backdropFilter: 'blur(16px) saturate(180%)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: '12px',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-                color: 'rgba(15, 23, 42, 0.9)'
-              }}
-            />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
             <Line 
               type="monotone" 
               dataKey="revenue" 
-              stroke="rgba(71, 85, 105, 0.8)" 
-              strokeWidth={3}
+              stroke="hsl(var(--primary))" 
+              strokeWidth={2}
               name="Revenue (KES)"
-              dot={{ fill: 'rgba(71, 85, 105, 0.8)', strokeWidth: 2, r: 5 }}
-              activeDot={{ r: 7, fill: 'rgba(51, 65, 85, 0.9)', stroke: 'rgba(255, 255, 255, 0.8)', strokeWidth: 2 }}
             />
             <Line 
               type="monotone" 
               dataKey="customers" 
-              stroke="rgba(100, 116, 139, 0.8)" 
-              strokeWidth={3}
+              stroke="hsl(var(--destructive))" 
+              strokeWidth={2}
               name="New Customers"
-              dot={{ fill: 'rgba(100, 116, 139, 0.8)', strokeWidth: 2, r: 5 }}
-              activeDot={{ r: 7, fill: 'rgba(71, 85, 105, 0.9)', stroke: 'rgba(255, 255, 255, 0.8)', strokeWidth: 2 }}
             />
           </LineChart>
         </ResponsiveContainer>
