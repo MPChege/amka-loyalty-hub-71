@@ -1,14 +1,15 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Calendar, Bell, Database } from 'lucide-react';
+import { Users, Calendar, Bell, Database, Award, DollarSign } from 'lucide-react';
 
 interface QuickActionsProps {
-  userRole: 'admin' | 'manager' | 'waiter';
+  userRole: 'super_admin' | 'admin' | 'manager' | 'waiter';
 }
 
 export default function QuickActions({ userRole }: QuickActionsProps) {
   const getActionsForRole = () => {
+    // Base actions for all roles
     const baseActions = [
       {
         title: 'View Orders',
@@ -19,28 +20,113 @@ export default function QuickActions({ userRole }: QuickActionsProps) {
       }
     ];
 
-    if (userRole === 'admin' || userRole === 'manager') {
+    // Super Admin - Full Global Access
+    if (userRole === 'super_admin') {
       return [
         ...baseActions,
         {
-          title: 'Add User',
-          description: 'Register new customer',
-          icon: Users,
-          action: () => console.log('Add user'),
+          title: 'Manage All Brands',
+          description: 'Switch between and manage all brands',
+          icon: Database,
+          action: () => console.log('Manage brands'),
           variant: 'secondary' as const
         },
         {
-          title: 'Create Campaign',
-          description: 'Launch new loyalty campaign',
+          title: 'Global Analytics',
+          description: 'View cross-brand performance',
           icon: Bell,
-          action: () => console.log('Create campaign'),
+          action: () => console.log('Global analytics'),
+          variant: 'outline' as const
+        },
+        {
+          title: 'System Configuration',
+          description: 'Configure global system settings',
+          icon: Users,
+          action: () => console.log('System config'),
+          variant: 'outline' as const
+        }
+      ];
+    }
+
+    // Brand Admin - Full Brand Access
+    if (userRole === 'admin') {
+      return [
+        ...baseActions,
+        {
+          title: 'Brand Analytics',
+          description: 'View detailed brand performance',
+          icon: Database,
+          action: () => console.log('Brand analytics'),
+          variant: 'secondary' as const
+        },
+        {
+          title: 'Manage Staff',
+          description: 'Add and manage brand staff',
+          icon: Users,
+          action: () => console.log('Manage staff'),
+          variant: 'outline' as const
+        },
+        {
+          title: 'Loyalty Settings',
+          description: 'Configure brand loyalty rules',
+          icon: Award,
+          action: () => console.log('Loyalty settings'),
+          variant: 'outline' as const
+        }
+      ];
+    }
+
+    // Manager - Limited Brand Access
+    if (userRole === 'manager') {
+      return [
+        ...baseActions,
+        {
+          title: 'Customer Management',
+          description: 'View and manage customers',
+          icon: Users,
+          action: () => console.log('Customer management'),
+          variant: 'secondary' as const
+        },
+        {
+          title: 'Campaign Manager',
+          description: 'Create and manage campaigns',
+          icon: Bell,
+          action: () => console.log('Campaign manager'),
           variant: 'outline' as const
         },
         {
           title: 'Points Adjustment',
-          description: 'Manually adjust user points',
-          icon: Database,
-          action: () => console.log('Adjust points'),
+          description: 'Approve customer point adjustments',
+          icon: Award,
+          action: () => console.log('Points adjustment'),
+          variant: 'outline' as const
+        }
+      ];
+    }
+
+    // Waiter - Order Management Only
+    if (userRole === 'waiter') {
+      return [
+        ...baseActions,
+        {
+          title: 'Process Redemption',
+          description: 'Handle customer point redemptions',
+          icon: Award,
+          action: () => console.log('Process redemption'),
+          variant: 'secondary' as const
+        },
+        {
+          title: 'Customer Lookup',
+          description: 'Find customer wallet balance',
+          icon: Users,
+          action: () => console.log('Customer lookup'),
+          variant: 'outline' as const
+        },
+        {
+          title: 'Top-up Request',
+          description: 'Request wallet top-up approval',
+          icon: DollarSign,
+          action: () => console.log('Top-up request'),
           variant: 'outline' as const
         }
       ];

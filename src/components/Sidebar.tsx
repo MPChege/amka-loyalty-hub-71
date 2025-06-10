@@ -21,43 +21,43 @@ const sidebarItems = [
     title: 'Analytics',
     icon: Activity,
     href: '/',
-    roles: ['admin', 'manager']
+    roles: ['super_admin', 'admin', 'manager']
   },
   {
     title: 'User Management',
     icon: Users,
     href: '/users',
-    roles: ['admin', 'manager']
+    roles: ['super_admin', 'admin', 'manager']
   },
   {
     title: 'Loyalty Program',
     icon: Database,
     href: '/loyalty',
-    roles: ['admin', 'manager']
+    roles: ['super_admin', 'admin', 'manager']
   },
   {
     title: 'Campaigns',
     icon: Bell,
     href: '/campaigns',
-    roles: ['admin', 'manager']
+    roles: ['super_admin', 'admin', 'manager']
   },
   {
     title: 'Bookings & Orders',
     icon: Calendar,
     href: '/orders',
-    roles: ['admin', 'manager', 'waiter']
+    roles: ['super_admin', 'admin', 'manager', 'waiter']
   },
   {
     title: 'Security',
     icon: Shield,
     href: '/security',
-    roles: ['admin']
+    roles: ['super_admin', 'admin']
   },
   {
     title: 'System Settings',
     icon: Cog,
     href: '/settings',
-    roles: ['admin']
+    roles: ['super_admin', 'admin']
   }
 ];
 
@@ -68,7 +68,7 @@ const brands = [
 ];
 
 interface SidebarProps {
-  userRole: 'admin' | 'manager' | 'waiter';
+  userRole: 'super_admin' | 'admin' | 'manager' | 'waiter';
   currentBrand: string;
   onBrandChange: (brand: string) => void;
 }
@@ -82,6 +82,7 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
   );
 
   const currentBrandInfo = brands.find(b => b.id === currentBrand);
+  const canSwitchBrands = userRole === 'super_admin';
 
   return (
     <div className={cn(
@@ -97,7 +98,9 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
                 {currentBrandInfo?.name}
               </h2>
               <p className="text-sm text-sidebar-foreground/60">
-                Admin Dashboard
+                {userRole === 'super_admin' ? 'Global Admin' : 
+                 userRole === 'admin' ? 'Brand Admin' :
+                 userRole === 'manager' ? 'Manager' : 'Staff'}
               </p>
             </div>
           )}
@@ -112,8 +115,8 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
         </div>
       </div>
 
-      {/* Brand Switcher */}
-      {!isCollapsed && (
+      {/* Brand Switcher - Only for Super Admin */}
+      {!isCollapsed && canSwitchBrands && (
         <div className="p-4 border-b border-sidebar-border">
           <label className="text-sm font-medium text-sidebar-foreground/80 mb-2 block">
             Switch Brand
@@ -129,6 +132,18 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
               </option>
             ))}
           </select>
+        </div>
+      )}
+
+      {/* Fixed Brand Display - For non-super admins */}
+      {!isCollapsed && !canSwitchBrands && (
+        <div className="p-4 border-b border-sidebar-border">
+          <label className="text-sm font-medium text-sidebar-foreground/80 mb-2 block">
+            Your Brand
+          </label>
+          <div className="w-full bg-sidebar-accent/50 border border-sidebar-border rounded-lg px-3 py-2 text-sidebar-foreground text-sm">
+            {currentBrandInfo?.name}
+          </div>
         </div>
       )}
 
@@ -165,13 +180,17 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-sidebar-primary rounded-full flex items-center justify-center">
             <span className="text-sidebar-primary-foreground text-sm font-medium">
-              {userRole === 'admin' ? 'A' : userRole === 'manager' ? 'M' : 'W'}
+              {userRole === 'super_admin' ? 'SA' : 
+               userRole === 'admin' ? 'A' : 
+               userRole === 'manager' ? 'M' : 'W'}
             </span>
           </div>
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-sidebar-foreground truncate">
-                {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                {userRole === 'super_admin' ? 'Super Admin' :
+                 userRole === 'admin' ? 'Brand Admin' :
+                 userRole === 'manager' ? 'Manager' : 'Staff'}
               </p>
               <p className="text-xs text-sidebar-foreground/60 truncate">
                 {currentBrandInfo?.name}

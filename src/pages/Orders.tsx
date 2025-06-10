@@ -16,24 +16,33 @@ export default function Orders() {
     kasa: 'Kasa Resort'
   };
 
+  const canSwitchBrands = user.role === 'super_admin';
+  const currentBrandName = brandNames[currentBrand as keyof typeof brandNames];
+
   return (
     <div className="flex h-screen bg-background">
       <Sidebar 
-        userRole={user.role === 'super_admin' ? 'admin' : user.role} 
+        userRole={user.role} 
         currentBrand={currentBrand}
-        onBrandChange={setCurrentBrand}
+        onBrandChange={canSwitchBrands ? setCurrentBrand : () => {}}
       />
       
       <div className="flex-1 flex flex-col overflow-hidden">
         <BrandHeader 
-          brandName={brandNames[currentBrand as keyof typeof brandNames]}
+          brandName={currentBrandName}
           userRole={user.firstName + ' ' + user.lastName}
         />
         
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl font-bold text-foreground mb-6">Bookings & Orders</h1>
-            <p className="text-muted-foreground">Manage reservations, orders, and table assignments.</p>
+            <h1 className="text-3xl font-bold text-foreground mb-6">
+              {user.role === 'super_admin' ? 'Global ' : `${currentBrandName} `}Bookings & Orders
+            </h1>
+            <p className="text-muted-foreground">
+              {user.role === 'waiter' 
+                ? 'Manage current orders, table assignments, and customer redemptions.' 
+                : 'Manage reservations, orders, and table assignments.'}
+            </p>
           </div>
         </main>
       </div>

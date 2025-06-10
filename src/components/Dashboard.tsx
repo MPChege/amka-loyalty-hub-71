@@ -33,6 +33,26 @@ export default function Dashboard() {
     kasa: 'Kasa Resort'
   };
 
+  // Role-based welcome messages
+  const getWelcomeMessage = () => {
+    switch (user.role) {
+      case 'super_admin':
+        return "Welcome to the Global Loyalty System Dashboard. You have full access to all brands and system settings.";
+      case 'admin':
+        return `Welcome to ${brandNames[currentBrand as keyof typeof brandNames]} Admin Dashboard. You have full control over your brand's loyalty program.`;
+      case 'manager':
+        return `Welcome to ${brandNames[currentBrand as keyof typeof brandNames]} Management Portal. You can manage customers, campaigns, and daily operations.`;
+      case 'waiter':
+        return `Welcome to ${brandNames[currentBrand as keyof typeof brandNames]} Staff Portal. You can manage orders, bookings, and customer redemptions.`;
+      default:
+        return "Welcome to the Loyalty System Dashboard.";
+    }
+  };
+
+  // Role-based permissions
+  const canRegisterAdmins = user.role === 'super_admin' || user.role === 'admin';
+  const canSwitchBrands = user.role === 'super_admin';
+
   const handleRegisterAdmin = async (adminData: AdminData) => {
     setRegistrationLoading(true);
     setRegistrationError(null);
@@ -62,9 +82,9 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen bg-background">
       <Sidebar 
-        userRole={user.role === 'super_admin' ? 'admin' : user.role} 
+        userRole={user.role} 
         currentBrand={currentBrand}
-        onBrandChange={setCurrentBrand}
+        onBrandChange={canSwitchBrands ? setCurrentBrand : () => {}}
       />
       
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -78,13 +98,15 @@ export default function Dashboard() {
             {/* Header with logout and admin registration */}
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold text-foreground">Dashboard Overview</h1>
-                <p className="text-muted-foreground">
-                  Welcome back, {user.firstName}. Here's what's happening with your loyalty program.
+                <h1 className="text-3xl font-bold text-foreground">
+                  {user.role === 'super_admin' ? 'Global' : brandNames[currentBrand as keyof typeof brandNames]} Dashboard
+                </h1>
+                <p className="text-muted-foreground mt-2">
+                  {getWelcomeMessage()}
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                {(user.role === 'super_admin' || user.role === 'admin') && (
+                {canRegisterAdmins && (
                   <AdminRegistration 
                     onRegister={handleRegisterAdmin}
                     isLoading={registrationLoading}
@@ -133,7 +155,7 @@ export default function Dashboard() {
 
             {/* Action Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <QuickActions userRole={user.role === 'super_admin' ? 'admin' : user.role} />
+              <QuickActions userRole={user.role} />
               <RecentActivity />
             </div>
           </div>
