@@ -50,49 +50,49 @@ const topCustomers = [
 const getTierColor = (tier: string) => {
   switch (tier) {
     case 'Gold':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-foreground/10 text-foreground border-foreground/20';
     case 'Silver':
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-muted text-muted-foreground border-muted-foreground/20';
     case 'Bronze':
-      return 'bg-orange-100 text-orange-800';
+      return 'bg-muted/50 text-muted-foreground border-muted-foreground/20';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-muted text-muted-foreground border-muted-foreground/20';
   }
 };
 
 export default function TopCustomers() {
   return (
-    <Card className="animate-fade-in">
+    <Card className="glass-chart border-glass">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Crown className="h-5 w-5 text-yellow-600" />
+        <CardTitle className="flex items-center gap-2 text-glass">
+          <Crown className="h-5 w-5 text-foreground/70" />
           Top Loyalty Customers
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {topCustomers.map((customer, index) => (
-            <div key={customer.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+            <div key={customer.id} className="flex items-center justify-between p-3 rounded-lg glass-panel border-glass/50">
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-muted-foreground w-6">
                     #{index + 1}
                   </span>
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="text-xs">
+                  <Avatar className="h-8 w-8 glass-panel border-glass">
+                    <AvatarFallback className="text-xs bg-transparent text-foreground/80">
                       {customer.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
                 </div>
                 <div>
-                  <p className="text-sm font-medium">{customer.name}</p>
+                  <p className="text-sm font-medium text-glass">{customer.name}</p>
                   <p className="text-xs text-muted-foreground">
                     {customer.points.toLocaleString()} points • {customer.spent}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 text-green-600">
+                <div className="flex items-center gap-1 text-foreground/70">
                   <TrendingUp className="h-3 w-3" />
                   <span className="text-xs font-medium">{customer.growth}</span>
                 </div>

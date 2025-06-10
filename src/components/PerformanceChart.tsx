@@ -13,30 +13,47 @@ const data = [
 
 export default function PerformanceChart() {
   return (
-    <Card className="animate-fade-in">
+    <Card className="glass-chart border-glass">
       <CardHeader>
-        <CardTitle>Performance Analytics</CardTitle>
+        <CardTitle className="text-glass">Performance Analytics</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+            <XAxis 
+              dataKey="name" 
+              stroke="hsl(var(--muted-foreground))"
+              fontSize={12}
+            />
+            <YAxis 
+              stroke="hsl(var(--muted-foreground))"
+              fontSize={12}
+            />
+            <Tooltip 
+              contentStyle={{
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '12px',
+                color: 'hsl(var(--foreground))'
+              }}
+            />
             <Line 
               type="monotone" 
               dataKey="revenue" 
-              stroke="hsl(var(--primary))" 
+              stroke="hsl(var(--foreground))" 
               strokeWidth={2}
               name="Revenue (KES)"
+              dot={{ fill: 'hsl(var(--foreground))', strokeWidth: 2, r: 4 }}
             />
             <Line 
               type="monotone" 
               dataKey="customers" 
-              stroke="hsl(var(--destructive))" 
+              stroke="hsl(var(--muted-foreground))" 
               strokeWidth={2}
               name="New Customers"
+              dot={{ fill: 'hsl(var(--muted-foreground))', strokeWidth: 2, r: 4 }}
             />
           </LineChart>
         </ResponsiveContainer>

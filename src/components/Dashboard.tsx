@@ -47,7 +47,7 @@ export default function Dashboard() {
       todayOrders: 127,
       averageSpend: 'KES 850',
       satisfaction: '4.8',
-      color: 'coffee'
+      color: 'primary'
     },
     mawimbi: {
       totalUsers: '1,923',
@@ -57,7 +57,7 @@ export default function Dashboard() {
       todayOrders: 89,
       averageSpend: 'KES 1,200',
       satisfaction: '4.7',
-      color: 'emerald'
+      color: 'primary'
     },
     kasa: {
       totalUsers: '3,156',
@@ -67,7 +67,7 @@ export default function Dashboard() {
       todayOrders: 156,
       averageSpend: 'KES 2,100',
       satisfaction: '4.9',
-      color: 'gold'
+      color: 'primary'
     }
   };
 
@@ -119,7 +119,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen">
       <Sidebar 
         userRole={user.role} 
         currentBrand={currentBrand}
@@ -132,23 +132,23 @@ export default function Dashboard() {
           userRole={user.firstName + ' ' + user.lastName}
         />
         
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6">
-          <div className="max-w-7xl mx-auto space-y-6">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
+          <div className="max-w-7xl mx-auto space-y-8">
             {/* Header with logout and admin registration */}
             <div className="flex justify-between items-center">
-              <div>
-                <h1 className="text-3xl font-bold text-foreground mb-2">
+              <div className="glass-panel p-6 flex-1 mr-6 animate-fade-in">
+                <h1 className="text-3xl font-bold text-glass mb-3">
                   {user.role === 'super_admin' ? 'Global' : brandNames[currentBrand as keyof typeof brandNames]} Dashboard
                 </h1>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground mb-4">
                   {getWelcomeMessage()}
                 </p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Badge variant="secondary" className="capitalize">
+                <div className="flex items-center gap-3">
+                  <Badge variant="secondary" className="glass-button capitalize border-glass">
                     {user.role.replace('_', ' ')}
                   </Badge>
                   {user.role === 'admin' && (
-                    <Badge variant="outline" className="text-primary">
+                    <Badge variant="outline" className="glass-button text-primary border-glass">
                       Brand Administrator
                     </Badge>
                   )}
@@ -163,7 +163,7 @@ export default function Dashboard() {
                     success={registrationSuccess}
                   />
                 )}
-                <Button variant="outline" onClick={logout} className="flex items-center gap-2">
+                <Button variant="outline" onClick={logout} className="glass-button flex items-center gap-2">
                   <LogOut className="h-4 w-4" />
                   Logout
                 </Button>
@@ -172,82 +172,90 @@ export default function Dashboard() {
 
             {/* Enhanced Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <DashboardCard
-                title="Total Customers"
-                value={currentMetrics.totalUsers}
-                icon={Users}
-                description="Active loyalty members"
-                trend={{ value: 12, isPositive: true }}
-                className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200"
-              />
-              <DashboardCard
-                title="Monthly Revenue"
-                value={currentMetrics.revenue}
-                icon={DollarSign}
-                description="From loyalty transactions"
-                trend={{ value: 8, isPositive: true }}
-                className="bg-gradient-to-br from-green-50 to-green-100 border-green-200"
-              />
-              <DashboardCard
-                title="Points Redeemed"
-                value={currentMetrics.pointsRedeemed}
-                icon={Award}
-                description="This month"
-                trend={{ value: 15, isPositive: true }}
-                className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200"
-              />
-              <DashboardCard
-                title="Growth Rate"
-                value={currentMetrics.growth}
-                icon={TrendingUp}
-                description="Customer acquisition"
-                trend={{ value: 5, isPositive: true }}
-                className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200"
-              />
+              <div className="glass-float">
+                <DashboardCard
+                  title="Total Customers"
+                  value={currentMetrics.totalUsers}
+                  icon={Users}
+                  description="Active loyalty members"
+                  trend={{ value: 12, isPositive: true }}
+                  className="glass-card border-glass"
+                />
+              </div>
+              <div className="glass-float">
+                <DashboardCard
+                  title="Monthly Revenue"
+                  value={currentMetrics.revenue}
+                  icon={DollarSign}
+                  description="From loyalty transactions"
+                  trend={{ value: 8, isPositive: true }}
+                  className="glass-card border-glass"
+                />
+              </div>
+              <div className="glass-float">
+                <DashboardCard
+                  title="Points Redeemed"
+                  value={currentMetrics.pointsRedeemed}
+                  icon={Award}
+                  description="This month"
+                  trend={{ value: 15, isPositive: true }}
+                  className="glass-card border-glass"
+                />
+              </div>
+              <div className="glass-float">
+                <DashboardCard
+                  title="Growth Rate"
+                  value={currentMetrics.growth}
+                  icon={TrendingUp}
+                  description="Customer acquisition"
+                  trend={{ value: 5, isPositive: true }}
+                  className="glass-card border-glass"
+                />
+              </div>
             </div>
 
             {/* Additional Performance Metrics for Admins */}
             {(user.role === 'admin' || user.role === 'super_admin') && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200">
+                <Card className="glass-card border-glass">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       Today's Orders
                     </CardTitle>
-                    <Calendar className="h-4 w-4 text-indigo-600" />
+                    <Calendar className="h-4 w-4 text-foreground/70" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-indigo-700">{currentMetrics.todayOrders}</div>
+                    <div className="text-2xl font-bold text-glass">{currentMetrics.todayOrders}</div>
                     <p className="text-xs text-muted-foreground mt-1">
                       Active transactions today
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
+                <Card className="glass-card border-glass">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       Average Spend
                     </CardTitle>
-                    <Coffee className="h-4 w-4 text-rose-600" />
+                    <Coffee className="h-4 w-4 text-foreground/70" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-rose-700">{currentMetrics.averageSpend}</div>
+                    <div className="text-2xl font-bold text-glass">{currentMetrics.averageSpend}</div>
                     <p className="text-xs text-muted-foreground mt-1">
                       Per customer transaction
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
+                <Card className="glass-card border-glass">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       Satisfaction Rate
                     </CardTitle>
-                    <Star className="h-4 w-4 text-amber-600" />
+                    <Star className="h-4 w-4 text-foreground/70" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-amber-700">{currentMetrics.satisfaction}/5</div>
+                    <div className="text-2xl font-bold text-glass">{currentMetrics.satisfaction}/5</div>
                     <p className="text-xs text-muted-foreground mt-1">
                       Customer feedback average
                     </p>
@@ -259,29 +267,38 @@ export default function Dashboard() {
             {/* Charts and Analytics Section for Admins */}
             {(user.role === 'admin' || user.role === 'super_admin') && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <PerformanceChart />
-                <TopCustomers />
+                <div className="glass-float">
+                  <PerformanceChart />
+                </div>
+                <div className="glass-float">
+                  <TopCustomers />
+                </div>
               </div>
             )}
 
             {/* Quick Actions and Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <QuickActions userRole={user.role} />
-              <RecentActivity />
+              <div className="glass-float">
+                <QuickActions userRole={user.role} />
+              </div>
+              <div className="glass-float">
+                <RecentActivity />
+              </div>
             </div>
 
             {/* Admin-only Brand Management Section */}
             {user.role === 'admin' && (
-              <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+              <Card className="glass-card border-glass relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent"></div>
+                <CardHeader className="relative">
+                  <CardTitle className="flex items-center gap-2 text-glass">
                     <Shield className="h-5 w-5 text-primary" />
                     Brand Administration Tools
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="relative">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Button variant="outline" className="h-auto p-4 flex-col items-start">
+                    <Button variant="outline" className="glass-button h-auto p-4 flex-col items-start">
                       <div className="flex items-center gap-2 mb-1">
                         <Users className="h-4 w-4" />
                         <span className="font-medium">Staff Management</span>
@@ -291,7 +308,7 @@ export default function Dashboard() {
                       </span>
                     </Button>
                     
-                    <Button variant="outline" className="h-auto p-4 flex-col items-start">
+                    <Button variant="outline" className="glass-button h-auto p-4 flex-col items-start">
                       <div className="flex items-center gap-2 mb-1">
                         <Bell className="h-4 w-4" />
                         <span className="font-medium">Campaign Control</span>
@@ -301,7 +318,7 @@ export default function Dashboard() {
                       </span>
                     </Button>
                     
-                    <Button variant="outline" className="h-auto p-4 flex-col items-start">
+                    <Button variant="outline" className="glass-button h-auto p-4 flex-col items-start">
                       <div className="flex items-center gap-2 mb-1">
                         <MapPin className="h-4 w-4" />
                         <span className="font-medium">Location Settings</span>
