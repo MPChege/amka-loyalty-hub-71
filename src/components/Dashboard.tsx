@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/Sidebar';
@@ -134,7 +133,7 @@ export default function Dashboard() {
 
             {/* Action Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <QuickActions />
+              <QuickActions userRole={user.role === 'super_admin' ? 'admin' : user.role} />
               <RecentActivity />
             </div>
           </div>
