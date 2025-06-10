@@ -119,139 +119,157 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20">
+    <div className="flex h-screen bg-gradient-to-br from-slate-100 via-blue-50/40 to-purple-50/30 relative overflow-hidden">
+      {/* Ambient background effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-purple-400/10 to-pink-400/10 animate-pulse"></div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      
       <Sidebar 
         userRole={user.role} 
         currentBrand={currentBrand}
         onBrandChange={canSwitchBrands ? setCurrentBrand : () => {}}
       />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <BrandHeader 
-          brandName={brandNames[currentBrand as keyof typeof brandNames]}
-          userRole={user.firstName + ' ' + user.lastName}
-        />
+      <div className="flex-1 flex flex-col overflow-hidden relative z-10">
+        <div className="liquid-glass-nav">
+          <BrandHeader 
+            brandName={brandNames[currentBrand as keyof typeof brandNames]}
+            userRole={user.firstName + ' ' + user.lastName}
+          />
+        </div>
         
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20 p-6">
-          <div className="max-w-7xl mx-auto space-y-6">
-            {/* Header with logout and admin registration */}
+        <main className="flex-1 overflow-x-hidden overflow-y-auto p-6 relative">
+          <div className="max-w-7xl mx-auto space-y-8">
+            {/* Header with liquid glass styling */}
             <div className="flex justify-between items-center">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <div className="liquid-glass-card p-6 flex-1 mr-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <h1 className="text-4xl font-bold glass-text">
                     {user.role === 'super_admin' ? 'Global' : brandNames[currentBrand as keyof typeof brandNames]} Dashboard
                   </h1>
-                  <Sparkles className="h-6 w-6 text-purple-500 animate-pulse" />
+                  <Sparkles className="h-8 w-8 text-purple-500/80 animate-pulse" />
                 </div>
-                <p className="text-slate-600 text-lg">
+                <p className="text-slate-600/90 text-lg mb-4">
                   {getWelcomeMessage()}
                 </p>
-                <div className="flex items-center gap-2 mt-3">
-                  <Badge variant="secondary" className="capitalize bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 border-indigo-200">
-                    {user.role.replace('_', ' ')}
+                <div className="flex items-center gap-3">
+                  <Badge variant="secondary" className="liquid-glass-card border-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-700 backdrop-blur-sm">
+                    <span className="capitalize">{user.role.replace('_', ' ')}</span>
                   </Badge>
                   {user.role === 'admin' && (
-                    <Badge variant="outline" className="text-purple-600 border-purple-300 bg-purple-50">
+                    <Badge variant="outline" className="liquid-glass-card border-purple-300/30 text-purple-600 bg-purple-50/20 backdrop-blur-sm">
                       Brand Administrator
                     </Badge>
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              
+              <div className="flex items-center gap-4">
                 {canRegisterAdmins && (
-                  <AdminRegistration 
-                    onRegister={handleRegisterAdmin}
-                    isLoading={registrationLoading}
-                    error={registrationError}
-                    success={registrationSuccess}
-                  />
+                  <div className="liquid-glass-card p-1">
+                    <AdminRegistration 
+                      onRegister={handleRegisterAdmin}
+                      isLoading={registrationLoading}
+                      error={registrationError}
+                      success={registrationSuccess}
+                    />
+                  </div>
                 )}
-                <Button variant="outline" onClick={logout} className="flex items-center gap-2 premium-button">
-                  <LogOut className="h-4 w-4" />
+                <Button variant="outline" onClick={logout} className="glass-button border-0">
+                  <LogOut className="h-4 w-4 mr-2" />
                   Logout
                 </Button>
               </div>
             </div>
 
-            {/* Enhanced Stats Cards */}
+            {/* Enhanced Stats Cards with liquid glass */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <DashboardCard
-                title="Total Customers"
-                value={currentMetrics.totalUsers}
-                icon={Users}
-                description="Active loyalty members"
-                trend={{ value: 12, isPositive: true }}
-                className="metric-card-blue"
-              />
-              <DashboardCard
-                title="Monthly Revenue"
-                value={currentMetrics.revenue}
-                icon={DollarSign}
-                description="From loyalty transactions"
-                trend={{ value: 8, isPositive: true }}
-                className="metric-card-green"
-              />
-              <DashboardCard
-                title="Points Redeemed"
-                value={currentMetrics.pointsRedeemed}
-                icon={Award}
-                description="This month"
-                trend={{ value: 15, isPositive: true }}
-                className="metric-card-purple"
-              />
-              <DashboardCard
-                title="Growth Rate"
-                value={currentMetrics.growth}
-                icon={TrendingUp}
-                description="Customer acquisition"
-                trend={{ value: 5, isPositive: true }}
-                className="metric-card-orange"
-              />
+              <div className="liquid-glass-metric blue floating-glass">
+                <DashboardCard
+                  title="Total Customers"
+                  value={currentMetrics.totalUsers}
+                  icon={Users}
+                  description="Active loyalty members"
+                  trend={{ value: 12, isPositive: true }}
+                  className="bg-transparent border-0 shadow-none"
+                />
+              </div>
+              <div className="liquid-glass-metric green floating-glass" style={{ animationDelay: '0.5s' }}>
+                <DashboardCard
+                  title="Monthly Revenue"
+                  value={currentMetrics.revenue}
+                  icon={DollarSign}
+                  description="From loyalty transactions"
+                  trend={{ value: 8, isPositive: true }}
+                  className="bg-transparent border-0 shadow-none"
+                />
+              </div>
+              <div className="liquid-glass-metric purple floating-glass" style={{ animationDelay: '1s' }}>
+                <DashboardCard
+                  title="Points Redeemed"
+                  value={currentMetrics.pointsRedeemed}
+                  icon={Award}
+                  description="This month"
+                  trend={{ value: 15, isPositive: true }}
+                  className="bg-transparent border-0 shadow-none"
+                />
+              </div>
+              <div className="liquid-glass-metric orange floating-glass" style={{ animationDelay: '1.5s' }}>
+                <DashboardCard
+                  title="Growth Rate"
+                  value={currentMetrics.growth}
+                  icon={TrendingUp}
+                  description="Customer acquisition"
+                  trend={{ value: 5, isPositive: true }}
+                  className="bg-transparent border-0 shadow-none"
+                />
+              </div>
             </div>
 
             {/* Additional Performance Metrics for Admins */}
             {(user.role === 'admin' || user.role === 'super_admin') && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="admin-card hover:scale-105 transition-transform duration-300">
+                <Card className="liquid-glass-card glass-refraction">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-600">
+                    <CardTitle className="text-sm font-medium text-slate-600/90">
                       Today's Orders
                     </CardTitle>
-                    <Calendar className="h-4 w-4 text-indigo-600" />
+                    <Calendar className="h-4 w-4 text-indigo-600/80" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-indigo-700">{currentMetrics.todayOrders}</div>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <div className="text-2xl font-bold glass-text">{currentMetrics.todayOrders}</div>
+                    <p className="text-xs text-slate-500/80 mt-1">
                       Active transactions today
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="admin-card hover:scale-105 transition-transform duration-300">
+                <Card className="liquid-glass-card glass-refraction">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-600">
+                    <CardTitle className="text-sm font-medium text-slate-600/90">
                       Average Spend
                     </CardTitle>
-                    <Coffee className="h-4 w-4 text-emerald-600" />
+                    <Coffee className="h-4 w-4 text-emerald-600/80" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-emerald-700">{currentMetrics.averageSpend}</div>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <div className="text-2xl font-bold glass-text">{currentMetrics.averageSpend}</div>
+                    <p className="text-xs text-slate-500/80 mt-1">
                       Per customer transaction
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="admin-card hover:scale-105 transition-transform duration-300">
+                <Card className="liquid-glass-card glass-refraction">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-600">
+                    <CardTitle className="text-sm font-medium text-slate-600/90">
                       Satisfaction Rate
                     </CardTitle>
-                    <Star className="h-4 w-4 text-amber-600" />
+                    <Star className="h-4 w-4 text-amber-600/80" />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold text-amber-700">{currentMetrics.satisfaction}/5</div>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <div className="text-2xl font-bold glass-text">{currentMetrics.satisfaction}/5</div>
+                    <p className="text-xs text-slate-500/80 mt-1">
                       Customer feedback average
                     </p>
                   </CardContent>
@@ -259,59 +277,67 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Charts and Analytics Section for Admins */}
+            {/* Charts and Analytics Section with liquid glass */}
             {(user.role === 'admin' || user.role === 'super_admin') && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <PerformanceChart />
-                <TopCustomers />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="liquid-glass-content">
+                  <PerformanceChart />
+                </div>
+                <div className="liquid-glass-content">
+                  <TopCustomers />
+                </div>
               </div>
             )}
 
             {/* Quick Actions and Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <QuickActions userRole={user.role} />
-              <RecentActivity />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="liquid-glass-content">
+                <QuickActions userRole={user.role} />
+              </div>
+              <div className="liquid-glass-content">
+                <RecentActivity />
+              </div>
             </div>
 
             {/* Admin-only Brand Management Section */}
             {user.role === 'admin' && (
-              <Card className="glass-effect border-indigo-200/50 hover:shadow-2xl transition-all duration-300">
+              <Card className="liquid-glass-content glass-refraction">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-indigo-600" />
-                    <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    <Shield className="h-5 w-5 text-indigo-600/80" />
+                    <span className="glass-text">
                       Brand Administration Tools
                     </span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Button variant="outline" className="h-auto p-4 flex-col items-start admin-card hover:scale-105 transition-all duration-300">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Users className="h-4 w-4 text-indigo-600" />
-                        <span className="font-medium text-slate-700">Staff Management</span>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <Button variant="outline" className="glass-button h-auto p-6 flex-col items-start border-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Users className="h-5 w-5 text-indigo-600/80" />
+                        <span className="font-medium text-slate-700/90">Staff Management</span>
                       </div>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-500/80">
                         Manage waiters and managers
                       </span>
                     </Button>
                     
-                    <Button variant="outline" className="h-auto p-4 flex-col items-start admin-card hover:scale-105 transition-all duration-300">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Bell className="h-4 w-4 text-purple-600" />
-                        <span className="font-medium text-slate-700">Campaign Control</span>
+                    <Button variant="outline" className="glass-button h-auto p-6 flex-col items-start border-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Bell className="h-5 w-5 text-purple-600/80" />
+                        <span className="font-medium text-slate-700/90">Campaign Control</span>
                       </div>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-500/80">
                         Create and manage promotions
                       </span>
                     </Button>
                     
-                    <Button variant="outline" className="h-auto p-4 flex-col items-start admin-card hover:scale-105 transition-all duration-300">
-                      <div className="flex items-center gap-2 mb-1">
-                        <MapPin className="h-4 w-4 text-emerald-600" />
-                        <span className="font-medium text-slate-700">Location Settings</span>
+                    <Button variant="outline" className="glass-button h-auto p-6 flex-col items-start border-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <MapPin className="h-5 w-5 text-emerald-600/80" />
+                        <span className="font-medium text-slate-700/90">Location Settings</span>
                       </div>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-500/80">
                         Configure branch settings
                       </span>
                     </Button>

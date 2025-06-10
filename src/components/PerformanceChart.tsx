@@ -13,43 +13,45 @@ const data = [
 
 export default function PerformanceChart() {
   return (
-    <Card className="glass-effect hover:shadow-2xl transition-all duration-300 border-indigo-200/50">
+    <Card className="bg-transparent border-0 shadow-none">
       <CardHeader>
-        <CardTitle className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <CardTitle className="glass-text text-lg">
           Performance Analytics
         </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-            <XAxis dataKey="name" stroke="#64748b" />
-            <YAxis stroke="#64748b" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(226, 232, 240, 0.3)" />
+            <XAxis dataKey="name" stroke="rgba(100, 116, 139, 0.7)" />
+            <YAxis stroke="rgba(100, 116, 139, 0.7)" />
             <Tooltip 
               contentStyle={{
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                border: '1px solid #e2e8f0',
-                borderRadius: '8px',
-                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(16px) saturate(180%)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '12px',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                color: 'rgba(15, 23, 42, 0.9)'
               }}
             />
             <Line 
               type="monotone" 
               dataKey="revenue" 
-              stroke="#6366f1" 
+              stroke="rgba(99, 102, 241, 0.8)" 
               strokeWidth={3}
               name="Revenue (KES)"
-              dot={{ fill: '#6366f1', strokeWidth: 2, r: 5 }}
-              activeDot={{ r: 7, fill: '#4f46e5' }}
+              dot={{ fill: 'rgba(99, 102, 241, 0.8)', strokeWidth: 2, r: 5 }}
+              activeDot={{ r: 7, fill: 'rgba(79, 70, 229, 0.9)', stroke: 'rgba(255, 255, 255, 0.8)', strokeWidth: 2 }}
             />
             <Line 
               type="monotone" 
               dataKey="customers" 
-              stroke="#8b5cf6" 
+              stroke="rgba(139, 92, 246, 0.8)" 
               strokeWidth={3}
               name="New Customers"
-              dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 5 }}
-              activeDot={{ r: 7, fill: '#7c3aed' }}
+              dot={{ fill: 'rgba(139, 92, 246, 0.8)', strokeWidth: 2, r: 5 }}
+              activeDot={{ r: 7, fill: 'rgba(124, 58, 237, 0.9)', stroke: 'rgba(255, 255, 255, 0.8)', strokeWidth: 2 }}
             />
           </LineChart>
         </ResponsiveContainer>

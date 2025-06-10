@@ -50,23 +50,23 @@ const topCustomers = [
 const getTierColor = (tier: string) => {
   switch (tier) {
     case 'Gold':
-      return 'bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 border border-amber-200';
+      return 'liquid-glass-card bg-gradient-to-r from-amber-400/20 to-yellow-400/20 text-amber-800 border-amber-400/30';
     case 'Silver':
-      return 'bg-gradient-to-r from-slate-100 to-gray-100 text-slate-700 border border-slate-200';
+      return 'liquid-glass-card bg-gradient-to-r from-slate-400/20 to-gray-400/20 text-slate-700 border-slate-400/30';
     case 'Bronze':
-      return 'bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 border border-orange-200';
+      return 'liquid-glass-card bg-gradient-to-r from-orange-400/20 to-amber-400/20 text-orange-700 border-orange-400/30';
     default:
-      return 'bg-gradient-to-r from-slate-100 to-gray-100 text-slate-700 border border-slate-200';
+      return 'liquid-glass-card bg-gradient-to-r from-slate-400/20 to-gray-400/20 text-slate-700 border-slate-400/30';
   }
 };
 
 export default function TopCustomers() {
   return (
-    <Card className="glass-effect hover:shadow-2xl transition-all duration-300 border-purple-200/50">
+    <Card className="bg-transparent border-0 shadow-none">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Crown className="h-5 w-5 text-amber-600" />
-          <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          <Crown className="h-5 w-5 text-amber-600/80" />
+          <span className="glass-text text-lg">
             Top Loyalty Customers
           </span>
         </CardTitle>
@@ -74,33 +74,35 @@ export default function TopCustomers() {
       <CardContent>
         <div className="space-y-4">
           {topCustomers.map((customer, index) => (
-            <div key={customer.id} className="flex items-center justify-between p-4 rounded-lg bg-gradient-to-r from-white/80 to-slate-50/80 backdrop-blur-sm border border-slate-200/50 hover:shadow-md transition-all duration-300">
-              <div className="flex items-center gap-3">
+            <div key={customer.id} className="liquid-glass-card p-4 glass-refraction">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-600 font-bold text-sm">
-                    #{index + 1}
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full liquid-glass-card bg-gradient-to-r from-indigo-400/30 to-purple-400/30 text-indigo-600/90 font-bold text-sm border-indigo-400/30">
+                      #{index + 1}
+                    </div>
+                    <Avatar className="h-10 w-10 liquid-glass-card border-white/30">
+                      <AvatarFallback className="text-xs bg-gradient-to-br from-indigo-500/80 to-purple-500/80 text-white backdrop-blur-sm">
+                        {customer.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
                   </div>
-                  <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
-                    <AvatarFallback className="text-xs bg-gradient-to-br from-indigo-500 to-purple-500 text-white">
-                      {customer.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-700/90">{customer.name}</p>
+                    <p className="text-xs text-slate-500/80">
+                      {customer.points.toLocaleString()} points • {customer.spent}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-700">{customer.name}</p>
-                  <p className="text-xs text-slate-500">
-                    {customer.points.toLocaleString()} points • {customer.spent}
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 liquid-glass-card bg-emerald-400/20 text-emerald-700 px-3 py-1 rounded-full border-emerald-400/30">
+                    <TrendingUp className="h-3 w-3" />
+                    <span className="text-xs font-medium">{customer.growth}</span>
+                  </div>
+                  <Badge variant="secondary" className={getTierColor(customer.tier)}>
+                    {customer.tier}
+                  </Badge>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
-                  <TrendingUp className="h-3 w-3" />
-                  <span className="text-xs font-medium">{customer.growth}</span>
-                </div>
-                <Badge variant="secondary" className={getTierColor(customer.tier)}>
-                  {customer.tier}
-                </Badge>
               </div>
             </div>
           ))}
