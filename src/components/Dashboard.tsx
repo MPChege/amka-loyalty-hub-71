@@ -6,29 +6,24 @@ import BrandHeader from '@/components/BrandHeader';
 import DashboardCard from '@/components/DashboardCard';
 import QuickActions from '@/components/QuickActions';
 import RecentActivity from '@/components/RecentActivity';
-import AdminRegistration from '@/components/AdminRegistration';
 import PerformanceChart from '@/components/PerformanceChart';
 import TopCustomers from '@/components/TopCustomers';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { LogOut, Users, TrendingUp, DollarSign, Award, Calendar, Shield, Bell, Coffee, MapPin, Star } from 'lucide-react';
-
-interface AdminData {
-  email: string;
-  password: string;
-  role: 'admin' | 'manager' | 'waiter';
-  brand: string;
-  firstName: string;
-  lastName: string;
-}
+import { 
+  Users, 
+  Calendar, 
+  Database, 
+  Activity, 
+  TrendingUp, 
+  DollarSign,
+  Award,
+  Target
+} from 'lucide-react';
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
-  const [currentBrand, setCurrentBrand] = useState(user?.brand === 'all' ? 'amka' : user?.brand || 'amka');
-  const [registrationLoading, setRegistrationLoading] = useState(false);
-  const [registrationError, setRegistrationError] = useState<string | null>(null);
-  const [registrationSuccess, setRegistrationSuccess] = useState<string | null>(null);
+  const { user } = useAuth();
+  const [currentBrand, setCurrentBrand] = useState(
+    user?.brand === 'all' ? 'amka' : user?.brand || 'amka'
+  );
 
   if (!user) return null;
 
@@ -38,88 +33,119 @@ export default function Dashboard() {
     kasa: 'Kasa Resort'
   };
 
-  const brandMetrics = {
-    amka: {
-      totalUsers: '2,847',
-      revenue: 'KES 45,230',
-      pointsRedeemed: '18,492',
-      growth: '23.5%',
-      todayOrders: 127,
-      averageSpend: 'KES 850',
-      satisfaction: '4.8',
-      color: 'primary'
-    },
-    mawimbi: {
-      totalUsers: '1,923',
-      revenue: 'KES 38,750',
-      pointsRedeemed: '12,847',
-      growth: '19.2%',
-      todayOrders: 89,
-      averageSpend: 'KES 1,200',
-      satisfaction: '4.7',
-      color: 'primary'
-    },
-    kasa: {
-      totalUsers: '3,156',
-      revenue: 'KES 67,890',
-      pointsRedeemed: '25,123',
-      growth: '31.8%',
-      todayOrders: 156,
-      averageSpend: 'KES 2,100',
-      satisfaction: '4.9',
-      color: 'primary'
-    }
-  };
-
-  // Role-based welcome messages
-  const getWelcomeMessage = () => {
-    switch (user.role) {
-      case 'super_admin':
-        return "Welcome to the Global Loyalty System Dashboard. You have full access to all brands and system settings.";
-      case 'admin':
-        return `Welcome to ${brandNames[currentBrand as keyof typeof brandNames]} Admin Dashboard. You have full control over your brand's loyalty program.`;
-      case 'manager':
-        return `Welcome to ${brandNames[currentBrand as keyof typeof brandNames]} Management Portal. You can manage customers, campaigns, and daily operations.`;
-      case 'waiter':
-        return `Welcome to ${brandNames[currentBrand as keyof typeof brandNames]} Staff Portal. You can manage orders, bookings, and customer redemptions.`;
-      default:
-        return "Welcome to the Loyalty System Dashboard.";
-    }
-  };
-
-  // Role-based permissions
-  const canRegisterAdmins = user.role === 'super_admin' || user.role === 'admin';
   const canSwitchBrands = user.role === 'super_admin';
-  const currentMetrics = brandMetrics[currentBrand as keyof typeof brandMetrics];
+  const currentBrandName = brandNames[currentBrand as keyof typeof brandNames];
 
-  const handleRegisterAdmin = async (adminData: AdminData) => {
-    setRegistrationLoading(true);
-    setRegistrationError(null);
-    setRegistrationSuccess(null);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mock validation
-      if (adminData.email === 'existing@admin.com') {
-        throw new Error('An admin with this email already exists');
+  // Dynamic stats based on user role and brand
+  const getDashboardStats = () => {
+    const baseStats = {
+      amka: {
+        users: '1,247',
+        orders: '34',
+        points: '8,942',
+        campaigns: '5',
+        revenue: 'KES 89,400',
+        growth: '+15%'
+      },
+      mawimbi: {
+        users: '987',
+        orders: '28',
+        points: '6,234',
+        campaigns: '4',
+        revenue: 'KES 67,200',
+        growth: '+22%'
+      },
+      kasa: {
+        users: '613',
+        orders: '15',
+        points: '4,466',
+        campaigns: '3',
+        revenue: 'KES 145,600',
+        growth: '+8%'
       }
+    };
+
+    const brandData = baseStats[currentBrand as keyof typeof baseStats];
+    
+    if (user.role === 'super_admin') {
+      const totalUsers = Object.values(baseStats).reduce((sum, brand) => 
+        sum + parseInt(brand.users.replace(',', '')), 0
+      );
+      const totalOrders = Object.values(baseStats).reduce((sum, brand) => 
+        sum + parseInt(brand.orders), 0
+      );
+      const totalPoints = Object.values(baseStats).reduce((sum, brand) => 
+        sum + parseInt(brand.points.replace(',', '')), 0
+      );
       
-      console.log('Registering new admin:', adminData);
-      setRegistrationSuccess(`Successfully created admin account for ${adminData.firstName} ${adminData.lastName}`);
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => setRegistrationSuccess(null), 3000);
-    } catch (err) {
-      setRegistrationError(err instanceof Error ? err.message : 'Registration failed');
-    } finally {
-      setRegistrationLoading(false);
+      return [
+        {
+          title: 'Total Users (All Brands)',
+          value: totalUsers.toLocaleString(),
+          icon: Users,
+          description: 'Active loyalty members across all brands',
+          trend: { value: 18, isPositive: true }
+        },
+        {
+          title: 'Today\'s Orders (All)',
+          value: totalOrders.toString(),
+          icon: Calendar,
+          description: 'Orders placed today across all brands',
+          trend: { value: 12, isPositive: true }
+        },
+        {
+          title: 'Total Points Pool',
+          value: totalPoints.toLocaleString(),
+          icon: Database,
+          description: 'Points redeemed this month (all brands)',
+          trend: { value: 5, isPositive: true }
+        },
+        {
+          title: 'Global Revenue',
+          value: 'KES 302,200',
+          icon: DollarSign,
+          description: 'Total revenue this month',
+          trend: { value: 15, isPositive: true }
+        }
+      ];
     }
+
+    return [
+      {
+        title: 'Active Users',
+        value: brandData.users,
+        icon: Users,
+        description: 'Active loyalty members',
+        trend: { value: 12, isPositive: true }
+      },
+      {
+        title: 'Today\'s Orders',
+        value: brandData.orders,
+        icon: Calendar,
+        description: 'Orders placed today',
+        trend: { value: 8, isPositive: true }
+      },
+      {
+        title: 'Points Redeemed',
+        value: brandData.points,
+        icon: Award,
+        description: 'Points redeemed this month',
+        trend: { value: -3, isPositive: false }
+      },
+      {
+        title: 'Monthly Revenue',
+        value: brandData.revenue,
+        icon: TrendingUp,
+        description: 'Revenue this month',
+        trend: { value: parseInt(brandData.growth.replace('%', '').replace('+', '')), isPositive: true }
+      }
+    ];
   };
+
+  const dashboardStats = getDashboardStats();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-background">
       <Sidebar 
         userRole={user.role} 
         currentBrand={currentBrand}
@@ -128,209 +154,112 @@ export default function Dashboard() {
       
       <div className="flex-1 flex flex-col overflow-hidden">
         <BrandHeader 
-          brandName={brandNames[currentBrand as keyof typeof brandNames]}
+          brandName={currentBrandName}
           userRole={user.firstName + ' ' + user.lastName}
         />
         
-        <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6">
           <div className="max-w-7xl mx-auto space-y-8">
-            {/* Header with logout and admin registration */}
-            <div className="flex justify-between items-center">
-              <div className="glass-panel p-6 flex-1 mr-6 animate-fade-in">
-                <h1 className="text-3xl font-bold text-glass mb-3">
-                  {user.role === 'super_admin' ? 'Global' : brandNames[currentBrand as keyof typeof brandNames]} Dashboard
-                </h1>
-                <p className="text-muted-foreground mb-4">
-                  {getWelcomeMessage()}
-                </p>
-                <div className="flex items-center gap-3">
-                  <Badge variant="secondary" className="glass-button capitalize border-glass">
-                    {user.role.replace('_', ' ')}
-                  </Badge>
-                  {user.role === 'admin' && (
-                    <Badge variant="outline" className="glass-button text-primary border-glass">
-                      Brand Administrator
-                    </Badge>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                {canRegisterAdmins && (
-                  <AdminRegistration 
-                    onRegister={handleRegisterAdmin}
-                    isLoading={registrationLoading}
-                    error={registrationError}
-                    success={registrationSuccess}
-                  />
-                )}
-                <Button variant="outline" onClick={logout} className="glass-button flex items-center gap-2">
-                  <LogOut className="h-4 w-4" />
-                  Logout
-                </Button>
-              </div>
+            {/* Welcome Section */}
+            <div className="glass-card p-6 border-glass">
+              <h1 className="text-3xl font-bold text-glass mb-2">
+                Welcome back, {user.firstName}! 👋
+              </h1>
+              <p className="text-muted-foreground">
+                {user.role === 'super_admin' 
+                  ? 'Manage your global loyalty program across all brands from this central dashboard.'
+                  : user.role === 'admin'
+                  ? `Oversee ${currentBrandName}'s loyalty program operations and analytics.`
+                  : user.role === 'manager'
+                  ? `Monitor ${currentBrandName}'s daily operations and customer engagement.`
+                  : `Handle customer orders and loyalty redemptions at ${currentBrandName}.`
+                }
+              </p>
             </div>
 
-            {/* Enhanced Stats Cards */}
+            {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="glass-float">
+              {dashboardStats.map((stat, index) => (
                 <DashboardCard
-                  title="Total Customers"
-                  value={currentMetrics.totalUsers}
-                  icon={Users}
-                  description="Active loyalty members"
-                  trend={{ value: 12, isPositive: true }}
-                  className="glass-card border-glass"
+                  key={index}
+                  title={stat.title}
+                  value={stat.value}
+                  icon={stat.icon}
+                  description={stat.description}
+                  trend={stat.trend}
+                  className="animate-fade-in glass-float"
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 />
-              </div>
-              <div className="glass-float">
-                <DashboardCard
-                  title="Monthly Revenue"
-                  value={currentMetrics.revenue}
-                  icon={DollarSign}
-                  description="From loyalty transactions"
-                  trend={{ value: 8, isPositive: true }}
-                  className="glass-card border-glass"
-                />
-              </div>
-              <div className="glass-float">
-                <DashboardCard
-                  title="Points Redeemed"
-                  value={currentMetrics.pointsRedeemed}
-                  icon={Award}
-                  description="This month"
-                  trend={{ value: 15, isPositive: true }}
-                  className="glass-card border-glass"
-                />
-              </div>
-              <div className="glass-float">
-                <DashboardCard
-                  title="Growth Rate"
-                  value={currentMetrics.growth}
-                  icon={TrendingUp}
-                  description="Customer acquisition"
-                  trend={{ value: 5, isPositive: true }}
-                  className="glass-card border-glass"
-                />
-              </div>
+              ))}
             </div>
-
-            {/* Additional Performance Metrics for Admins */}
-            {(user.role === 'admin' || user.role === 'super_admin') && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="glass-card border-glass">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      Today's Orders
-                    </CardTitle>
-                    <Calendar className="h-4 w-4 text-foreground/70" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-glass">{currentMetrics.todayOrders}</div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Active transactions today
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="glass-card border-glass">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      Average Spend
-                    </CardTitle>
-                    <Coffee className="h-4 w-4 text-foreground/70" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-glass">{currentMetrics.averageSpend}</div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Per customer transaction
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="glass-card border-glass">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      Satisfaction Rate
-                    </CardTitle>
-                    <Star className="h-4 w-4 text-foreground/70" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-glass">{currentMetrics.satisfaction}/5</div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Customer feedback average
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
-
-            {/* Charts and Analytics Section for Admins */}
-            {(user.role === 'admin' || user.role === 'super_admin') && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="glass-float">
-                  <PerformanceChart />
-                </div>
-                <div className="glass-float">
-                  <TopCustomers />
-                </div>
-              </div>
-            )}
 
             {/* Quick Actions and Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="glass-float">
-                <QuickActions userRole={user.role} />
-              </div>
-              <div className="glass-float">
-                <RecentActivity />
-              </div>
+              <QuickActions userRole={user.role} />
+              <RecentActivity />
             </div>
 
-            {/* Admin-only Brand Management Section */}
-            {user.role === 'admin' && (
-              <Card className="glass-card border-glass relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent"></div>
-                <CardHeader className="relative">
-                  <CardTitle className="flex items-center gap-2 text-glass">
-                    <Shield className="h-5 w-5 text-primary" />
-                    Brand Administration Tools
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="relative">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Button variant="outline" className="glass-button h-auto p-4 flex-col items-start">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Users className="h-4 w-4" />
-                        <span className="font-medium">Staff Management</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        Manage waiters and managers
-                      </span>
-                    </Button>
-                    
-                    <Button variant="outline" className="glass-button h-auto p-4 flex-col items-start">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Bell className="h-4 w-4" />
-                        <span className="font-medium">Campaign Control</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        Create and manage promotions
-                      </span>
-                    </Button>
-                    
-                    <Button variant="outline" className="glass-button h-auto p-4 flex-col items-start">
-                      <div className="flex items-center gap-2 mb-1">
-                        <MapPin className="h-4 w-4" />
-                        <span className="font-medium">Location Settings</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        Configure branch settings
-                      </span>
-                    </Button>
+            {/* Charts and Analytics */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <PerformanceChart />
+              <TopCustomers />
+            </div>
+
+            {/* Brand-specific insights */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 glass-card p-6 border-glass">
+                <h3 className="text-xl font-semibold mb-4 text-glass flex items-center gap-2">
+                  <Target className="h-5 w-5" />
+                  {user.role === 'super_admin' ? 'Global' : currentBrandName} Performance Insights
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="glass-panel p-4 border-glass/50">
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Peak Hours</h4>
+                    <p className="text-2xl font-bold text-glass">2-4 PM</p>
+                    <p className="text-xs text-muted-foreground">Highest customer activity</p>
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                  <div className="glass-panel p-4 border-glass/50">
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Avg. Points/Visit</h4>
+                    <p className="text-2xl font-bold text-glass">125</p>
+                    <p className="text-xs text-muted-foreground">Points earned per transaction</p>
+                  </div>
+                  <div className="glass-panel p-4 border-glass/50">
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Customer Retention</h4>
+                    <p className="text-2xl font-bold text-glass">87%</p>
+                    <p className="text-xs text-muted-foreground">Monthly retention rate</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="glass-card p-6 border-glass">
+                <h3 className="text-lg font-semibold mb-4 text-glass flex items-center gap-2">
+                  <Database className="h-5 w-5" />
+                  Loyalty Status
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Total Points Pool</span>
+                    <span className="font-bold text-glass">847,293</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">This Month</span>
+                    <span className="font-bold text-foreground/80">+15,642</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Redemption Rate</span>
+                    <span className="font-bold text-foreground/80">23%</span>
+                  </div>
+                  <div className="pt-2 border-t border-glass/30">
+                    <p className="text-xs text-muted-foreground">
+                      {user.role === 'super_admin' 
+                        ? 'Cross-brand point sharing is active'
+                        : 'Points can be used across all participating locations'
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </main>
       </div>
