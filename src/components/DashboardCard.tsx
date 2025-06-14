@@ -2,6 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
+import * as React from 'react';
 
 interface DashboardCardProps {
   title: string;
@@ -13,6 +14,7 @@ interface DashboardCardProps {
     isPositive: boolean;
   };
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export default function DashboardCard({ 
@@ -21,10 +23,11 @@ export default function DashboardCard({
   icon: Icon, 
   description, 
   trend,
-  className 
+  className,
+  style
 }: DashboardCardProps) {
   return (
-    <Card className={cn("glass-card border-glass backdrop-blur-glass", className)}>
+    <Card className={cn("glass-card border-glass backdrop-blur-glass", className)} style={style}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
