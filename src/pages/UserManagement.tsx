@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Search, Filter, UserPlus, Download, Users, Crown, TrendingUp, Phone, Mail } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 export default function UserManagement() {
   const { user } = useAuth();
@@ -16,6 +17,13 @@ export default function UserManagement() {
   const [searchTerm, setSearchTerm] = useState('');
 
   if (!user) return null;
+
+  const handleAction = (actionName: string, description: string) => {
+    toast({
+      title: actionName,
+      description: `${description} - Feature coming soon!`,
+    });
+  };
 
   const brandNames = {
     amka: 'Café Amka',
@@ -156,11 +164,11 @@ export default function UserManagement() {
                 </div>
                 {user.role !== 'waiter' && (
                   <div className="flex gap-2">
-                    <Button className="flex items-center gap-2">
+                    <Button className="flex items-center gap-2" onClick={() => handleAction('Add Customer', 'Opening customer creation form')}>
                       <UserPlus className="h-4 w-4" />
                       Add Customer
                     </Button>
-                    <Button variant="outline" className="flex items-center gap-2">
+                    <Button variant="outline" className="flex items-center gap-2" onClick={() => handleAction('Export Users', 'Generating user data export')}>
                       <Download className="h-4 w-4" />
                       Export
                     </Button>
@@ -179,7 +187,7 @@ export default function UserManagement() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button variant="outline" className="flex items-center gap-2" onClick={() => handleAction('Filter Users', 'Opening advanced filter options')}>
                   <Filter className="h-4 w-4" />
                   Filter
                 </Button>
@@ -285,7 +293,7 @@ export default function UserManagement() {
                           </div>
                           
                           {user.role !== 'waiter' && (
-                            <Button size="sm" variant="outline">
+                            <Button size="sm" variant="outline" onClick={() => handleAction('Manage Customer', `Opening management panel for ${customer.name}`)}>
                               Manage
                             </Button>
                           )}

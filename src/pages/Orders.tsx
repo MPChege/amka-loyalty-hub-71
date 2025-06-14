@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/Sidebar';
 import BrandHeader from '@/components/BrandHeader';
@@ -213,12 +212,12 @@ export default function Orders() {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <Button className="flex items-center gap-2">
+                  <Button className="flex items-center gap-2" onClick={() => toast({ title: 'New Order', description: 'Opening new order creation form.' })}>
                     <Plus className="h-4 w-4" />
                     New Order
                   </Button>
                   {user.role !== 'waiter' && (
-                    <Button variant="outline" className="flex items-center gap-2">
+                    <Button variant="outline" className="flex items-center gap-2" onClick={() => toast({ title: 'Reservations', description: 'Opening reservations management panel.' })}>
                       <Calendar className="h-4 w-4" />
                       Reservations
                     </Button>

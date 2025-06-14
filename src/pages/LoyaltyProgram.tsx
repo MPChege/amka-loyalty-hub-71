@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/Sidebar';
 import BrandHeader from '@/components/BrandHeader';
@@ -160,11 +159,11 @@ export default function LoyaltyProgram() {
                 </div>
                 {user.role !== 'waiter' && (
                   <div className="flex gap-2">
-                    <Button className="flex items-center gap-2">
+                    <Button className="flex items-center gap-2" onClick={() => toast({ title: 'Add Reward', description: 'Reward creation panel will open here.' })}>
                       <Plus className="h-4 w-4" />
                       Add Reward
                     </Button>
-                    <Button variant="outline" className="flex items-center gap-2">
+                    <Button variant="outline" className="flex items-center gap-2" onClick={() => toast({ title: 'Program Settings', description: 'Program settings panel will open here.' })}>
                       <Settings className="h-4 w-4" />
                       Program Settings
                     </Button>
