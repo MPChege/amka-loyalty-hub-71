@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -11,11 +12,12 @@ import {
   Cog,
   ChevronLeft,
   ChevronRight,
-  LogOut // Added LogOut icon
+  LogOut,
+  Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/hooks/useAuth'; // Import useAuth
+import { useAuth } from '@/hooks/useAuth';
 
 const sidebarItems = [
   {
@@ -28,6 +30,12 @@ const sidebarItems = [
     title: 'User Management',
     icon: Users,
     href: '/users',
+    roles: ['super_admin', 'admin', 'manager']
+  },
+  {
+    title: 'Wallet',
+    icon: Wallet,
+    href: '/wallet',
     roles: ['super_admin', 'admin', 'manager']
   },
   {
@@ -77,7 +85,7 @@ interface SidebarProps {
 export default function Sidebar({ userRole, currentBrand, onBrandChange }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
-  const { logout } = useAuth(); // Grab logout function
+  const { logout } = useAuth();
 
   const filteredItems = sidebarItems.filter(item => 
     item.roles.includes(userRole)
@@ -88,18 +96,16 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
 
   return (
     <div className={cn(
-      "bg-sidebar border-r border-sidebar-border h-screen transition-all duration-300 flex flex-col",
+      "bg-sidebar border-r border-sidebar-border h-screen transition-all duration-300 flex flex-col shadow-xl",
       isCollapsed ? "w-16" : "w-64"
     )}>
       {/* Brand Header */}
-      <div className="p-4 border-b border-sidebar-border">
+      <div className="p-4 border-b border-sidebar-border bg-gradient-to-r from-slate-800 via-indigo-700 to-violet-700">
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <div className="flex-1">
-              <h2 className="text-lg font-semibold text-sidebar-foreground">
-                {currentBrandInfo?.name}
-              </h2>
-              <p className="text-sm text-sidebar-foreground/60">
+              <h2 className="text-lg font-bold text-white drop-shadow">{currentBrandInfo?.name}</h2>
+              <p className="text-sm text-white/70">
                 {userRole === 'super_admin' ? 'Global Admin' : 
                  userRole === 'admin' ? 'Brand Admin' :
                  userRole === 'manager' ? 'Manager' : 'Staff'}
@@ -110,7 +116,7 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
             variant="ghost"
             size="sm"
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="text-sidebar-foreground hover:bg-sidebar-accent"
+            className="text-white hover:bg-indigo-600"
           >
             {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
           </Button>
@@ -151,24 +157,24 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
 
       {/* Navigation */}
       <nav className="flex-1 p-4">
-        <ul className="space-y-2">
+        <ul className="space-y-3">
           {filteredItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.href;
-            
             return (
               <li key={item.href}>
                 <Link
                   to={item.href}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors duration-200",
-                    "hover:bg-sidebar-accent text-sidebar-foreground",
-                    isActive && "bg-sidebar-primary text-sidebar-primary-foreground"
+                    "flex items-center gap-3 px-3 py-2 rounded-xl font-medium transition-all duration-200 shadow-none",
+                    "hover:bg-indigo-50 hover:text-indigo-600",
+                    isActive && "bg-indigo-600/90 text-white shadow-lg"
                   )}
+                  style={{ boxShadow: isActive ? '0 4px 18px -4px #6366f1aa' : undefined }}
                 >
                   <Icon className="h-5 w-5 flex-shrink-0" />
                   {!isCollapsed && (
-                    <span className="font-medium">{item.title}</span>
+                    <span className="font-semibold">{item.title}</span>
                   )}
                 </Link>
               </li>
@@ -178,10 +184,10 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
       </nav>
 
       {/* User Info */}
-      <div className="p-4 border-t border-sidebar-border">
+      <div className="p-4 border-t border-sidebar-border bg-gradient-to-b from-violet-700/70 to-slate-900">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-sidebar-primary rounded-full flex items-center justify-center">
-            <span className="text-sidebar-primary-foreground text-sm font-medium">
+          <div className="w-8 h-8 bg-indigo-400 rounded-full flex items-center justify-center shadow">
+            <span className="text-white text-sm font-bold">
               {userRole === 'super_admin' ? 'SA' : 
                userRole === 'admin' ? 'A' : 
                userRole === 'manager' ? 'M' : 'W'}
@@ -189,35 +195,33 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
           </div>
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-sidebar-foreground truncate">
+              <p className="text-sm font-semibold text-white truncate">
                 {userRole === 'super_admin' ? 'Super Admin' :
                  userRole === 'admin' ? 'Brand Admin' :
                  userRole === 'manager' ? 'Manager' : 'Staff'}
               </p>
-              <p className="text-xs text-sidebar-foreground/60 truncate">
+              <p className="text-xs text-white/70 truncate">
                 {currentBrandInfo?.name}
               </p>
             </div>
           )}
         </div>
-        {/* Sign Out Button */}
         {!isCollapsed && (
           <Button
             variant="ghost"
             size="sm"
-            className="mt-4 w-full flex items-center gap-2 text-sidebar-foreground hover:bg-destructive/10"
+            className="mt-4 w-full flex items-center gap-2 text-white/90 hover:bg-indigo-700 hover:text-white font-semibold"
             onClick={logout}
           >
             <LogOut className="h-4 w-4" />
             Sign Out
           </Button>
         )}
-        {/* Optionally, if the sidebar is collapsed, show icon-only sign out */}
         {isCollapsed && (
           <Button
             variant="ghost"
             size="icon"
-            className="mt-4 w-8 h-8 flex items-center justify-center text-sidebar-foreground hover:bg-destructive/10"
+            className="mt-4 w-8 h-8 flex items-center justify-center text-white hover:bg-indigo-700"
             onClick={logout}
             aria-label="Sign Out"
           >

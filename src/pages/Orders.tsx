@@ -234,7 +234,7 @@ export default function Orders() {
                 <div className="flex gap-2">
                    <Dialog open={isNewOrderOpen} onOpenChange={setNewOrderOpen}>
                       <DialogTrigger asChild>
-                         <Button className="flex items-center gap-2">
+                         <Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold drop-shadow-md">
                             <Plus className="h-4 w-4" />
                             New Order
                          </Button>
@@ -250,7 +250,7 @@ export default function Orders() {
                   {user.role !== 'waiter' && (
                     <Dialog open={isReservationOpen} onOpenChange={setReservationOpen}>
                         <DialogTrigger asChild>
-                            <Button variant="outline" className="flex items-center gap-2">
+                            <Button variant="outline" className="flex items-center gap-2 border-indigo-400 hover:bg-indigo-50">
                                 <Calendar className="h-4 w-4" />
                                 Reservations
                             </Button>

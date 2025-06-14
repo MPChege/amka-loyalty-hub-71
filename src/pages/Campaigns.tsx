@@ -165,7 +165,7 @@ export default function Campaigns() {
                 {user.role !== 'waiter' && (
                   <Dialog open={isAddCampaignOpen} onOpenChange={setAddCampaignOpen}>
                     <DialogTrigger asChild>
-                      <Button className="flex items-center gap-2">
+                      <Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold drop-shadow-md">
                         <Plus className="h-4 w-4" />
                         New Campaign
                       </Button>

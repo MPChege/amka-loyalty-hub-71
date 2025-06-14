@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/Sidebar';
 import BrandHeader from '@/components/BrandHeader';
@@ -12,12 +11,15 @@ import { Search, Filter, UserPlus, Download, Users, Crown, Phone, Mail } from 'l
 import { toast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AddCustomerForm } from '@/components/AddCustomerForm';
+import { Eye, Wallet as WalletIcon } from 'lucide-react';
 
 export default function UserManagement() {
   const { user } = useAuth();
   const [currentBrand, setCurrentBrand] = useState(user?.brand === 'all' ? 'amka' : user?.brand || 'amka');
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddCustomerOpen, setAddCustomerOpen] = useState(false);
+
+  const [selectedWalletUser, setSelectedWalletUser] = useState<any>(null);
 
   if (!user) return null;
 
@@ -169,10 +171,10 @@ export default function UserManagement() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6">
           <div className="max-w-7xl mx-auto space-y-6">
             {/* Header */}
-            <div className="glass-card p-6 border-glass">
+            <div className="glass-card p-6 border-glass rounded-xl shadow-sm bg-gradient-to-br from-white/80 to-indigo-50">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h1 className="text-3xl font-bold text-glass flex items-center gap-2">
+                  <h1 className="text-3xl font-bold text-indigo-800 flex items-center gap-2 drop-shadow">
                     <Users className="h-8 w-8" />
                     {user.role === 'super_admin' ? 'Global ' : `${currentBrandName} `}User Management
                   </h1>
@@ -186,7 +188,7 @@ export default function UserManagement() {
                   <div className="flex gap-2">
                     <Dialog open={isAddCustomerOpen} onOpenChange={setAddCustomerOpen}>
                       <DialogTrigger asChild>
-                        <Button className="flex items-center gap-2">
+                        <Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow">
                           <UserPlus className="h-4 w-4" />
                           Add Customer
                         </Button>
@@ -215,7 +217,7 @@ export default function UserManagement() {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input 
                     placeholder="Search customers by name or email..."
-                    className="pl-10"
+                    className="pl-10 bg-white/90"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -281,7 +283,7 @@ export default function UserManagement() {
               <CardContent>
                 <div className="space-y-4">
                   {filteredUsers.length > 0 ? filteredUsers.map((customer) => (
-                    <div key={customer.id} className="glass-panel p-4 border-glass/50 rounded-lg">
+                    <div key={customer.id} className="glass-panel p-4 border-glass/50 rounded-lg hover:shadow-lg transition">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <Avatar className="h-12 w-12 glass-panel border-glass">
@@ -304,7 +306,7 @@ export default function UserManagement() {
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-4">
                           <div className="text-right">
                             <div className="flex items-center gap-2">
                               <Crown className="h-4 w-4 text-yellow-500" />
@@ -324,7 +326,12 @@ export default function UserManagement() {
                               <p className="text-xs text-muted-foreground">Last: {customer.lastVisit}</p>
                             </div>
                           </div>
-                          
+                          <Button size="sm" variant="outline"
+                            onClick={() => setSelectedWalletUser(customer)}
+                            className="flex items-center gap-2 text-indigo-700 hover:bg-indigo-50 border-indigo-200">
+                            <WalletIcon className="w-4 h-4" />
+                            Wallet
+                          </Button>
                           {user.role !== 'waiter' && (
                             <Button size="sm" variant="outline" onClick={() => handleAction('Manage Customer', `Opening management panel for ${customer.name}`)}>
                               Manage
@@ -344,6 +351,33 @@ export default function UserManagement() {
           </div>
         </main>
       </div>
+      {/* Wallet Detail Dialog */}
+      {selectedWalletUser && (
+        <Dialog open={!!selectedWalletUser} onOpenChange={(open) => !open && setSelectedWalletUser(null)}>
+          <DialogContent className="max-w-md glass-card border-glass text-glass">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <WalletIcon className="h-6 w-6 text-indigo-600" />
+                {selectedWalletUser.name}&apos;s Wallet
+              </DialogTitle>
+              <DialogDescription>
+                Wallet, balance and points for this customer.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-5 text-lg py-2">
+              <div className="flex items-center gap-6">
+                <span className="text-sm font-medium text-indigo-800">Balance:</span>
+                <span className="font-bold text-2xl text-indigo-700">KES {selectedWalletUser.spent ? (15000 - selectedWalletUser.spent).toLocaleString() : '0'}</span>
+              </div>
+              <div className="flex items-center gap-6">
+                <span className="text-sm font-medium text-indigo-800">Points:</span>
+                <span className="font-bold text-2xl text-yellow-600">{selectedWalletUser.points.toLocaleString()}</span>
+              </div>
+            </div>
+            <Button className="w-full mt-4" onClick={() => setSelectedWalletUser(null)}>Close</Button>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
