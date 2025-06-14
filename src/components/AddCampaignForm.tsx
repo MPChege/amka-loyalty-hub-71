@@ -17,7 +17,7 @@ const formSchema = z.object({
   endDate: z.string().refine((d) => new Date(d).toString() !== "Invalid Date", "Please enter a valid end date."),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof formSchema>;
 
 interface AddCampaignFormProps {
   onSuccess: (values: FormValues) => void;

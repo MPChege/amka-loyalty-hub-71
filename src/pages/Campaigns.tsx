@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 import { Bell, Plus, Eye } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { AddCampaignForm } from '@/components/AddCampaignForm';
+import { AddCampaignForm, FormValues as CampaignFormValues } from '@/components/AddCampaignForm';
 
 export default function Campaigns() {
   const { user } = useAuth();
@@ -31,6 +31,7 @@ export default function Campaigns() {
     {
       id: 1,
       name: 'Summer Smoothies Special',
+      description: 'A special discount on all our summer smoothies.',
       status: 'active',
       type: 'Discount',
       reach: 1250,
@@ -42,6 +43,7 @@ export default function Campaigns() {
     {
       id: 2,
       name: 'Weekend Wine Pairing',
+      description: 'Enjoy a curated selection of wines paired with our special menu.',
       status: 'active',
       type: 'Offer',
       reach: 890,
@@ -53,6 +55,7 @@ export default function Campaigns() {
     {
       id: 3,
       name: 'Holiday Getaway Package',
+      description: 'Book a relaxing holiday stay with our exclusive package.',
       status: 'scheduled',
       type: 'Bundle',
       reach: 0,
@@ -64,6 +67,7 @@ export default function Campaigns() {
     {
       id: 4,
       name: 'Morning Coffee Rush',
+      description: 'Get a 20% discount on all coffee before 10 AM.',
       status: 'completed',
       type: 'Discount',
       reach: 2100,
@@ -76,7 +80,7 @@ export default function Campaigns() {
 
   const [campaigns, setCampaigns] = useState(mockCampaignsData);
 
-  const handleAddCampaign = (newCampaign: { name: string; type: string; startDate: string; endDate: string }) => {
+  const handleAddCampaign = (newCampaign: CampaignFormValues) => {
     const campaignToAdd = {
       id: campaigns.length + 1,
       ...newCampaign,
