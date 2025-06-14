@@ -201,6 +201,46 @@ export default function Orders() {
     });
   };
 
+  // Add reservations state
+  const [reservations, setReservations] = useState([
+    {
+      id: "RES-001",
+      customerName: "Jane Smith",
+      phone: "+254 733 555 123",
+      guests: 2,
+      date: "2024-06-14",
+      time: "19:00",
+      brand: "amka",
+      status: "upcoming"
+    },
+    {
+      id: "RES-002",
+      customerName: "Abdul Karim",
+      phone: "+254 701 888 222",
+      guests: 4,
+      date: "2024-06-16",
+      time: "13:30",
+      brand: "mawimbi",
+      status: "upcoming"
+    }
+  ]);
+
+  // AddReservation handler
+  const handleAddReservation = (newRes: { customerName: string, phone: string, guests: number, date: string, time: string }) => {
+    const reservationToAdd = {
+      ...newRes,
+      id: `RES-00${reservations.length + 1}`,
+      brand: currentBrand,
+      status: "upcoming"
+    };
+    setReservations([reservationToAdd, ...reservations]);
+  };
+
+  // Filtered reservations by brand/role
+  const filteredReservations = reservations.filter(r =>
+    user.role === 'super_admin' || r.brand === currentBrand
+  );
+
   return (
     <div className="flex h-screen bg-background">
       <Sidebar 
@@ -260,7 +300,7 @@ export default function Orders() {
                                 <DialogTitle>Book a Reservation</DialogTitle>
                                 <DialogDescription>Enter reservation details below.</DialogDescription>
                             </DialogHeader>
-                            <AddReservationForm setOpen={setReservationOpen} />
+                            <AddReservationForm setOpen={setReservationOpen} onSuccess={handleAddReservation} />
                         </DialogContent>
                     </Dialog>
                   )}
@@ -435,6 +475,58 @@ export default function Orders() {
                     </div>
                   ))}
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Reservations Section */}
+            <Card className="glass-card border-glass">
+              <CardHeader>
+                <CardTitle className="text-glass flex items-center gap-2">
+                  <Calendar className="h-6 w-6" />
+                  Reservations
+                  <span className="ml-2 text-xs px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">
+                    {filteredReservations.length}
+                  </span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {filteredReservations.length === 0 ? (
+                  <div className="text-muted-foreground p-4 text-center">
+                    No reservations found.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredReservations.map(reservation => (
+                      <div key={reservation.id} className="glass-panel p-4 border-glass/40 rounded-lg shadow-md flex flex-col gap-2">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <h3 className="font-semibold text-glass">{reservation.customerName}</h3>
+                            <p className="text-xs text-muted-foreground">{reservation.phone}</p>
+                          </div>
+                          <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            {reservation.status}
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap gap-4 text-xs justify-between mt-2 text-muted-foreground">
+                          <span>
+                            <span className="font-medium text-glass">Guests:</span> {reservation.guests}
+                          </span>
+                          <span>
+                            <span className="font-medium text-glass">Date:</span> {reservation.date}
+                          </span>
+                          <span>
+                            <span className="font-medium text-glass">Time:</span> {reservation.time}
+                          </span>
+                        </div>
+                        {user.role === 'super_admin' && (
+                          <div className="text-xs text-right text-muted-foreground">
+                            <span className="italic">{brandNames[reservation.brand]}</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
