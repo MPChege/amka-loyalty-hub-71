@@ -8,13 +8,16 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Search, Filter, UserPlus, Download, Users, Crown, TrendingUp, Phone, Mail } from 'lucide-react';
+import { Search, Filter, UserPlus, Download, Users, Crown, Phone, Mail } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AddCustomerForm } from '@/components/AddCustomerForm';
 
 export default function UserManagement() {
   const { user } = useAuth();
   const [currentBrand, setCurrentBrand] = useState(user?.brand === 'all' ? 'amka' : user?.brand || 'amka');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAddCustomerOpen, setAddCustomerOpen] = useState(false);
 
   if (!user) return null;
 
@@ -102,8 +105,25 @@ export default function UserManagement() {
       brand: 'mawimbi'
     }
   ];
+  
+  const [users, setUsers] = useState(mockUsers);
 
-  const filteredUsers = mockUsers.filter(u => 
+  const handleAddCustomer = (newCustomer: { name: string; email: string; phone: string; }) => {
+    const newUser = {
+      id: users.length + 1,
+      ...newCustomer,
+      points: 0,
+      spent: 0,
+      tier: 'Bronze',
+      joinDate: new Date().toISOString().split('T')[0],
+      lastVisit: new Date().toISOString().split('T')[0],
+      visits: 1,
+      brand: currentBrand
+    };
+    setUsers([newUser, ...users]);
+  };
+
+  const filteredUsers = users.filter(u => 
     user.role === 'super_admin' || u.brand === currentBrand
   ).filter(u => 
     u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -164,10 +184,23 @@ export default function UserManagement() {
                 </div>
                 {user.role !== 'waiter' && (
                   <div className="flex gap-2">
-                    <Button className="flex items-center gap-2" onClick={() => handleAction('Add Customer', 'Opening customer creation form')}>
-                      <UserPlus className="h-4 w-4" />
-                      Add Customer
-                    </Button>
+                    <Dialog open={isAddCustomerOpen} onOpenChange={setAddCustomerOpen}>
+                      <DialogTrigger asChild>
+                        <Button className="flex items-center gap-2">
+                          <UserPlus className="h-4 w-4" />
+                          Add Customer
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px] glass-card border-glass text-glass">
+                        <DialogHeader>
+                          <DialogTitle>Add New Customer</DialogTitle>
+                          <DialogDescription>
+                            Enter the details for the new customer. Click save when you're done.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <AddCustomerForm onSuccess={handleAddCustomer} setOpen={setAddCustomerOpen} />
+                      </DialogContent>
+                    </Dialog>
                     <Button variant="outline" className="flex items-center gap-2" onClick={() => handleAction('Export Users', 'Generating user data export')}>
                       <Download className="h-4 w-4" />
                       Export
@@ -247,7 +280,7 @@ export default function UserManagement() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {filteredUsers.map((customer) => (
+                  {filteredUsers.length > 0 ? filteredUsers.map((customer) => (
                     <div key={customer.id} className="glass-panel p-4 border-glass/50 rounded-lg">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -300,7 +333,11 @@ export default function UserManagement() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <p>No customers found matching your search.</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

@@ -14,6 +14,7 @@ import Orders from "@/pages/Orders";
 import Security from "@/pages/Security";
 import Settings from "@/pages/Settings";
 import NotFound from "./pages/NotFound";
+import Wallet from "./pages/Wallet";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/users" element={<UserManagement />} />
+        <Route path="/wallet" element={<Wallet />} />
         <Route path="/loyalty" element={<LoyaltyProgram />} />
         <Route path="/campaigns" element={<Campaigns />} />
         <Route path="/orders" element={<Orders />} />

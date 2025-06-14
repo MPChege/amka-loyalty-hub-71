@@ -10,22 +10,24 @@ import { toast } from '@/hooks/use-toast';
 import { 
   Calendar, 
   Search, 
-  Filter, 
   Plus, 
   Clock, 
   CheckCircle, 
   XCircle,
-  Users,
-  DollarSign,
   Eye,
   Edit
 } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AddOrderForm } from '@/components/AddOrderForm';
+import { AddReservationForm } from '@/components/AddReservationForm';
 
 export default function Orders() {
   const { user } = useAuth();
   const [currentBrand, setCurrentBrand] = useState(user?.brand === 'all' ? 'amka' : user?.brand || 'amka');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [isNewOrderOpen, setNewOrderOpen] = useState(false);
+  const [isReservationOpen, setReservationOpen] = useState(false);
 
   if (!user) return null;
 
@@ -39,7 +41,7 @@ export default function Orders() {
   const currentBrandName = brandNames[currentBrand as keyof typeof brandNames];
 
   // Mock orders data
-  const mockOrders = [
+  const mockOrdersData = [
     {
       id: 'ORD-001',
       customerName: 'Sarah Johnson',
@@ -111,8 +113,26 @@ export default function Orders() {
       paymentMethod: 'Card'
     }
   ];
+  
+  const [orders, setOrders] = useState(mockOrdersData);
+  
+  const handleAddOrder = (newOrder: { customerName: string; customerPhone: string; tableNumber: string; items: string; }) => {
+    const orderToAdd = {
+      ...newOrder,
+      id: `ORD-00${orders.length + 1}`,
+      items: newOrder.items.split(',').map(item => item.trim()),
+      total: Math.floor(Math.random() * (5000 - 500)) + 500, // Mock total
+      pointsEarned: Math.floor(Math.random() * (500 - 50)) + 50, // Mock points
+      status: 'pending',
+      orderTime: new Date().toISOString().replace('T', ' ').substring(0, 16),
+      completedTime: null,
+      brand: currentBrand,
+      paymentMethod: Math.random() > 0.5 ? 'Card' : 'Cash'
+    };
+    setOrders([orderToAdd, ...orders]);
+  };
 
-  const filteredOrders = mockOrders.filter(order => 
+  const filteredOrders = orders.filter(order => 
     user.role === 'super_admin' || order.brand === currentBrand
   ).filter(order => 
     order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -212,15 +232,37 @@ export default function Orders() {
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  <Button className="flex items-center gap-2" onClick={() => toast({ title: 'New Order', description: 'Opening new order creation form.' })}>
-                    <Plus className="h-4 w-4" />
-                    New Order
-                  </Button>
+                   <Dialog open={isNewOrderOpen} onOpenChange={setNewOrderOpen}>
+                      <DialogTrigger asChild>
+                         <Button className="flex items-center gap-2">
+                            <Plus className="h-4 w-4" />
+                            New Order
+                         </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md glass-card border-glass text-glass">
+                         <DialogHeader>
+                            <DialogTitle>Create New Order</DialogTitle>
+                            <DialogDescription>Enter order details below.</DialogDescription>
+                         </DialogHeader>
+                         <AddOrderForm onSuccess={handleAddOrder} setOpen={setNewOrderOpen} />
+                      </DialogContent>
+                   </Dialog>
                   {user.role !== 'waiter' && (
-                    <Button variant="outline" className="flex items-center gap-2" onClick={() => toast({ title: 'Reservations', description: 'Opening reservations management panel.' })}>
-                      <Calendar className="h-4 w-4" />
-                      Reservations
-                    </Button>
+                    <Dialog open={isReservationOpen} onOpenChange={setReservationOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="outline" className="flex items-center gap-2">
+                                <Calendar className="h-4 w-4" />
+                                Reservations
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md glass-card border-glass text-glass">
+                            <DialogHeader>
+                                <DialogTitle>Book a Reservation</DialogTitle>
+                                <DialogDescription>Enter reservation details below.</DialogDescription>
+                            </DialogHeader>
+                            <AddReservationForm setOpen={setReservationOpen} />
+                        </DialogContent>
+                    </Dialog>
                   )}
                 </div>
               </div>

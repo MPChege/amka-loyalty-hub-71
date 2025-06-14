@@ -8,10 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
 import { Bell, Plus, Eye } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AddCampaignForm } from '@/components/AddCampaignForm';
 
 export default function Campaigns() {
   const { user } = useAuth();
   const [currentBrand, setCurrentBrand] = useState(user?.brand === 'all' ? 'amka' : user?.brand || 'amka');
+  const [isAddCampaignOpen, setAddCampaignOpen] = useState(false);
 
   if (!user) return null;
 
@@ -24,7 +27,7 @@ export default function Campaigns() {
   const canSwitchBrands = user.role === 'super_admin';
   const currentBrandName = brandNames[currentBrand as keyof typeof brandNames];
   
-  const mockCampaigns = [
+  const mockCampaignsData = [
     {
       id: 1,
       name: 'Summer Smoothies Special',
@@ -71,7 +74,21 @@ export default function Campaigns() {
     },
   ];
 
-  const filteredCampaigns = mockCampaigns.filter(c => user.role === 'super_admin' || c.brand === currentBrand);
+  const [campaigns, setCampaigns] = useState(mockCampaignsData);
+
+  const handleAddCampaign = (newCampaign: { name: string; type: string; startDate: string; endDate: string }) => {
+    const campaignToAdd = {
+      id: campaigns.length + 1,
+      ...newCampaign,
+      status: 'scheduled',
+      reach: 0,
+      conversions: 0,
+      brand: currentBrand,
+    };
+    setCampaigns([campaignToAdd, ...campaigns]);
+  };
+
+  const filteredCampaigns = campaigns.filter(c => user.role === 'super_admin' || c.brand === currentBrand);
 
   const campaignStats = {
     active: filteredCampaigns.filter(c => c.status === 'active').length,
@@ -125,10 +142,23 @@ export default function Campaigns() {
                   </p>
                 </div>
                 {user.role !== 'waiter' && (
-                  <Button className="flex items-center gap-2" onClick={() => handleAction('New Campaign', 'Opening campaign creation wizard')}>
-                    <Plus className="h-4 w-4" />
-                    New Campaign
-                  </Button>
+                  <Dialog open={isAddCampaignOpen} onOpenChange={setAddCampaignOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="flex items-center gap-2">
+                        <Plus className="h-4 w-4" />
+                        New Campaign
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-lg glass-card border-glass text-glass">
+                      <DialogHeader>
+                        <DialogTitle>Create New Campaign</DialogTitle>
+                        <DialogDescription>
+                          Fill out the form below to launch a new marketing campaign.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <AddCampaignForm onSuccess={handleAddCampaign} setOpen={setAddCampaignOpen} />
+                    </DialogContent>
+                  </Dialog>
                 )}
               </div>
             </div>
