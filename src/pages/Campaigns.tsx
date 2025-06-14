@@ -1,3 +1,4 @@
+
 import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/Sidebar';
 import BrandHeader from '@/components/BrandHeader';
@@ -95,7 +96,11 @@ export default function Campaigns() {
   const handleAddCampaign = (newCampaign: CampaignFormValues) => {
     const campaignToAdd: Campaign = {
       id: campaigns.length + 1,
-      ...newCampaign,
+      name: newCampaign.name,
+      description: newCampaign.description,
+      type: newCampaign.type,
+      startDate: newCampaign.startDate,
+      endDate: newCampaign.endDate,
       status: 'scheduled',
       reach: 0,
       conversions: 0,
