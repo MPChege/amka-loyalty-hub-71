@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/hooks/useAuth';
 import Sidebar from '@/components/Sidebar';
 import BrandHeader from '@/components/BrandHeader';
@@ -10,6 +9,19 @@ import { toast } from '@/hooks/use-toast';
 import { Bell, Plus, Eye } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AddCampaignForm, FormValues as CampaignFormValues } from '@/components/AddCampaignForm';
+
+interface Campaign {
+  id: number;
+  name: string;
+  description: string;
+  status: 'active' | 'scheduled' | 'completed';
+  type: 'Discount' | 'Offer' | 'Bundle';
+  reach: number;
+  conversions: number;
+  startDate: string;
+  endDate: string;
+  brand: string;
+}
 
 export default function Campaigns() {
   const { user } = useAuth();
@@ -27,7 +39,7 @@ export default function Campaigns() {
   const canSwitchBrands = user.role === 'super_admin';
   const currentBrandName = brandNames[currentBrand as keyof typeof brandNames];
   
-  const mockCampaignsData = [
+  const mockCampaignsData: Campaign[] = [
     {
       id: 1,
       name: 'Summer Smoothies Special',
@@ -78,10 +90,10 @@ export default function Campaigns() {
     },
   ];
 
-  const [campaigns, setCampaigns] = useState(mockCampaignsData);
+  const [campaigns, setCampaigns] = useState<Campaign[]>(mockCampaignsData);
 
   const handleAddCampaign = (newCampaign: CampaignFormValues) => {
-    const campaignToAdd = {
+    const campaignToAdd: Campaign = {
       id: campaigns.length + 1,
       ...newCampaign,
       status: 'scheduled',
@@ -100,7 +112,7 @@ export default function Campaigns() {
     totalConversions: filteredCampaigns.reduce((sum, c) => sum + c.conversions, 0),
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: Campaign['status']) => {
     switch (status) {
       case 'active': return 'bg-green-100 text-green-800 border-green-200';
       case 'scheduled': return 'bg-blue-100 text-blue-800 border-blue-200';
