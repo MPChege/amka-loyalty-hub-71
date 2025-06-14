@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -11,10 +10,12 @@ import {
   Shield,
   Cog,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  LogOut // Added LogOut icon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/useAuth'; // Import useAuth
 
 const sidebarItems = [
   {
@@ -76,6 +77,7 @@ interface SidebarProps {
 export default function Sidebar({ userRole, currentBrand, onBrandChange }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const { logout } = useAuth(); // Grab logout function
 
   const filteredItems = sidebarItems.filter(item => 
     item.roles.includes(userRole)
@@ -198,6 +200,30 @@ export default function Sidebar({ userRole, currentBrand, onBrandChange }: Sideb
             </div>
           )}
         </div>
+        {/* Sign Out Button */}
+        {!isCollapsed && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-4 w-full flex items-center gap-2 text-sidebar-foreground hover:bg-destructive/10"
+            onClick={logout}
+          >
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </Button>
+        )}
+        {/* Optionally, if the sidebar is collapsed, show icon-only sign out */}
+        {isCollapsed && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="mt-4 w-8 h-8 flex items-center justify-center text-sidebar-foreground hover:bg-destructive/10"
+            onClick={logout}
+            aria-label="Sign Out"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        )}
       </div>
     </div>
   );
